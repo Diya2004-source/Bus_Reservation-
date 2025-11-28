@@ -1,21 +1,52 @@
-/* Background Image For All Pages */
 body {
     background: url("images/home.jpg") no-repeat center center fixed;
     background-size: cover;
     font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh; 
+    display: flex;
+    flex-direction: column;
 }
 
-/* Transparent Card */
-.card-custom {
-    background: rgba(255, 255, 255, 0.80);
-    backdrop-filter: blur(5px);
-    border-radius: 15px;
+.container {
+    flex: 1; 
 }
 
-/* Animated Buttons */
-.btn-animate {
+.navbar {
+    background-color: #28a745 !important; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.navbar .nav-link {
+    color: #fff !important;
     transition: 0.3s;
-    transform: translateY(0px);
+}
+
+.navbar .nav-link:hover {
+    color: #ffc107 !important; 
+    text-decoration: underline;
+}
+
+.navbar-brand {
+    color: #fff !important;
+}
+
+.card-custom {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(6px);
+    border-radius: 15px;
+    transition: 0.3s;
+}
+
+.card-custom:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.3);
+}
+
+.btn-animate {
+    transition: all 0.3s ease;
+    transform: translateY(0);
 }
 
 .btn-animate:hover {
@@ -23,15 +54,33 @@ body {
     box-shadow: 0 8px 20px rgba(0,0,0,0.3);
 }
 
-/* Navbar */
-nav {
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+.btn-primary:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
 }
 
-/* Footer Links */
+.btn-success:hover {
+    background-color: #28a745;
+    border-color: #218838;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+    border-color: #d39e00;
+}
+
+footer {
+    background-color: rgba(0,0,0,0.8);
+    color: #fff;
+    text-align: center;
+    padding: 1rem;
+    margin-top: auto; 
+}
+
 footer a {
-    text-decoration: none;
+    color: #ffc107;
     font-weight: bold;
+    transition: 0.3s;
 }
 
 footer a:hover {
@@ -39,12 +88,23 @@ footer a:hover {
     text-decoration: underline;
 }
 
-/* Bus Tracking Image */
+input.form-control {
+    border-radius: 8px;
+    padding: 10px;
+    transition: 0.3s;
+}
+
+input.form-control:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 5px rgba(40,167,69,0.5);
+}
+
 #map {
     height: 350px;
-    background: #fff;
+    background: #f8f9fa;
     border-radius: 15px;
     position: relative;
+    overflow: hidden;
 }
 
 #bus {
@@ -53,4 +113,19 @@ footer a:hover {
     top: 150px;
     left: 20px;
     transition: 1s;
+}
+
+#qrDiv {
+    text-align: center;
+}
+
+#qrDiv img {
+    border: 5px solid #28a745;
+    border-radius: 15px;
+    transition: 0.3s;
+}
+
+#qrDiv img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
 }
