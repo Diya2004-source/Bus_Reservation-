@@ -87,7 +87,7 @@ function paymentDone(){
         <a href="user_index.html" class="btn btn-success mt-3">Back to Home</a>`;
     
     // Clear booking data
-    localStorage.removeItem("user_booking");
+    localStorage.removeItem("user_booking.html");
 }
 
 //bus tracking
