@@ -2,7 +2,11 @@
 const buses = [
     { route: "Rajkot → Ahmedabad", from: "Rajkot", to: "Ahmedabad", time: "8:00 AM", fare: 350, rating: 4.5, seatsLeft: 12 },
     { route: "Rajkot → Surat", from: "Rajkot", to: "Surat", time: "6:30 AM", fare: 420, rating: 4.2, seatsLeft: 8 },
-    { route: "Surat → Mumbai", from: "Surat", to: "Mumbai", time: "7:15 AM", fare: 900, rating: 4.8, seatsLeft: 5 }
+    { route: "Surat → Mumbai", from: "Surat", to: "Mumbai", time: "7:15 AM", fare: 900, rating: 4.8, seatsLeft: 5 },
+     { route: "Banglore → Delhi", from: "Banglore", to: "Delhi", time: "10:30 AM", fare: 2000, rating: 4.9, seatsLeft: 3 },
+      { route: "Udaipur → Rajkot", from: "Udaipur", to: "Rajkot", time: "8:00 PM", fare: 1500, rating: 4.8, seatsLeft: 5 },
+       { route: "Pune → Baroda", from: "Pune", to: "Baroda", time: "6:00 PM", fare: 1000, rating: 4.5, seatsLeft: 5 },
+        { route: "Rajkot → Delhi", from: "Rajkot", to: "Delhi", time: "7:30 PM", fare: 2500, rating: 4.8, seatsLeft: 10 }
 ];
 
 //search bus
