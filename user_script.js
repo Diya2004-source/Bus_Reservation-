@@ -1,112 +1,170 @@
-//add routes
-const buses = [
-    { route: "Rajkot → Ahmedabad", from: "Rajkot", to: "Ahmedabad", time: "8:00 AM", fare: 350, rating: 4.5, seatsLeft: 12 },
-    { route: "Rajkot → Surat", from: "Rajkot", to: "Surat", time: "6:30 AM", fare: 420, rating: 4.2, seatsLeft: 8 },
-    { route: "Surat → Mumbai", from: "Surat", to: "Mumbai", time: "7:15 AM", fare: 900, rating: 4.8, seatsLeft: 5 },
-     { route: "Banglore → Delhi", from: "Banglore", to: "Delhi", time: "10:30 AM", fare: 2000, rating: 4.9, seatsLeft: 3 },
-      { route: "Udaipur → Rajkot", from: "Udaipur", to: "Rajkot", time: "8:00 PM", fare: 1500, rating: 4.8, seatsLeft: 5 },
-       { route: "Pune → Baroda", from: "Pune", to: "Baroda", time: "6:00 PM", fare: 1000, rating: 4.5, seatsLeft: 5 },
-        { route: "Rajkot → Delhi", from: "Rajkot", to: "Delhi", time: "7:30 PM", fare: 2500, rating: 4.8, seatsLeft: 10 }
-];
-
-//search bus
+// =======================
+// SEARCH BUS
+// =======================
 function searchBus() {
-    const from = document.getElementById("from").value.trim().toLowerCase();
-    const to = document.getElementById("to").value.trim().toLowerCase();
-    const resultList = buses.filter(b => b.from.toLowerCase() === from && b.to.toLowerCase() === to);
+    const from = $("#from").val();
+    const to = $("#to").val();
 
-    let output = "";
-    if(resultList.length === 0){
-        output = `<div class="alert alert-danger mt-3">No buses found!</div>`;
-    } else {
-        resultList.forEach(bus=>{
-            output += `<div class="card card-custom shadow p-3 mt-3">
-                <h4>${bus.route}</h4>
-                <p><b>Time:</b> ${bus.time}</p>
-                <p><b>Fare:</b> ₹${bus.fare}</p>
-                <p><b>Rating:</b> ⭐${bus.rating}</p>
-                <p><b>Seats Left:</b> ${bus.seatsLeft}</p>
-                <button class="btn btn-success btn-animate" onclick="selectSeat('${bus.route}', ${bus.fare})">Book Now</button>
-            </div>`;
-        });
-    }
-    const container = document.getElementById("busList");
-    if(container) container.innerHTML = output;
-}
+    $.ajax({
+        url: "api/search_bus.php",
+        type: "GET",
+        data: { from: from, to: to },
+        success: function (res) {
+            const buses = JSON.parse(res);
+            let html = "";
 
-//seat selection
-function selectSeat(route, fare){
-    const seatNumbers = Array.from({length:10},(_,i)=>i+1);
-    let html = `<div class="card card-custom p-4 mt-4 shadow">
-        <h4>${route}</h4><p><b>Fare:</b> ₹${fare}</p><h5>Select Seat</h5><div class="row">`;
-    seatNumbers.forEach(num=>{
-        html += `<div class="col-3 p-2">
-            <button class="btn btn-outline-primary w-100" onclick="goPayment('${route}',${fare},${num})">Seat ${num}</button>
-        </div>`;
+            if (buses.length === 0) {
+                html = "<h3>No buses found</h3>";
+            } else {
+                buses.forEach(bus => {
+                    html += `
+                    <div class='card p-3 mt-3'>
+                        <h4>${bus.route}</h4>
+                        <p>Time: ${bus.time}</p>
+                        <p>Fare: ₹${bus.fare}</p>
+                        <button class="btn btn-primary" 
+                                onclick="openSeats(${bus.id}, '${bus.route}', ${bus.fare})">
+                            Book
+                        </button>
+                    </div>`;
+                });
+            }
+
+            $("#busList").html(html);
+        }
     });
-    html += `</div></div>`;
-    document.getElementById("busList").innerHTML = html;
 }
 
-//payment
-function goPayment(route,fare,seat){
-    const booking = { route, fare, seat };
-    localStorage.setItem("user_booking", JSON.stringify(booking));
+// =======================
+// FETCH SEATS
+// =======================
+function openSeats(bus_id, route, fare) {
+    localStorage.setItem("booking_busId", bus_id);
+    localStorage.setItem("booking_route", route);
+    localStorage.setItem("booking_fare", fare);
+
+    $.ajax({
+        url: "api/get_seats.php",
+        type: "GET",
+        data: { bus_id: bus_id },
+        success: function (res) {
+            const seats = JSON.parse(res);
+            let html = `<h3>Select Your Seat</h3><div class="row">`;
+
+            seats.forEach(s => {
+                html += `
+                <button 
+                    class="btn ${s.is_booked == 1 ? 'btn-danger' : 'btn-primary'} m-2 seat-btn"
+                    onclick="selectSeat(${s.seat_no})"
+                    ${s.is_booked == 1 ? 'disabled' : ''}>
+                    Seat ${s.seat_no}
+                </button>`;
+            });
+
+            html += "</div>";
+            $("#busList").html(html);
+        }
+    });
+}
+
+// =======================
+// SELECT SEAT
+// =======================
+function selectSeat(seat) {
+    localStorage.setItem("booking_seat", seat);
+
+    $("#busList").html(`
+        <div class="alert alert-success">
+            You selected <b>Seat ${seat}</b>
+        </div>
+        <button id="payNow" class="btn btn-success">Proceed to Payment</button>
+    `);
+}
+
+// =======================
+// PROCEED TO PAYMENT
+// =======================
+$(document).on("click", "#payNow", function () {
     window.location.href = "user_payment.html";
-}
+});
 
-//qr code
-function generateQRCode(){
-    const booking = JSON.parse(localStorage.getItem("user_booking"));
-    if(!booking) return alert("No booking data found!");
+// =======================
+// PAYMENT PAGE – SHOW FARE & VALIDATE INPUT
+// =======================
+document.addEventListener("DOMContentLoaded", () => {
+    if (window.location.pathname.includes("user_payment.html")) {
+        const fare = localStorage.getItem("booking_fare");
+        const payBtn = document.getElementById("payBtn");
 
-    const qrData = encodeURIComponent(`Bus: ${booking.route}\nSeat: ${booking.seat}\nFare: ₹${booking.fare}`);
-    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${qrData}`;
+        if (payBtn) {
+            payBtn.innerText = `Pay ₹${fare}`;
 
-    const qrDiv = document.getElementById("qrDiv");
-    const qrImg = document.getElementById("qrCode");
-    qrImg.src = qrCodeUrl;
+            payBtn.addEventListener("click", function(e) {
+                e.preventDefault(); // prevent reload
 
-    const doneBtn = document.getElementById("paymentDoneBtn");
-    if(doneBtn) doneBtn.style.display = "block";
+                const name = document.getElementById("cardName").value.trim();
+                const number = document.getElementById("cardNumber").value.trim();
 
-    qrDiv.style.display = "block";
-}
+                if (!name || !number) {
+                    alert("Please enter your name and card number.");
+                    return;
+                }
 
-//payment done
-function paymentDone(){
-    const booking = JSON.parse(localStorage.getItem("user_booking"));
-    if(!booking) return alert("No booking info found!");
+                if (!/^\d{12,19}$/.test(number)) {
+                    alert("Please enter a valid card number (12-19 digits).");
+                    return;
+                }
 
-    const qrDiv = document.getElementById("qrDiv");
-    qrDiv.innerHTML = `<h3 class="text-success">Congratulations! </h3>
-        <p>Your seat has been booked successfully.</p>
-        <p><b>Bus:</b> ${booking.route}</p>
-        <p><b>Seat:</b> ${booking.seat}</p>
-        <p><b>Fare Paid:</b> ₹${booking.fare}</p>
-        <a href="user_index.html" class="btn btn-success mt-3">Back to Home</a>`;
-    
-    // Clear booking data
-    localStorage.removeItem("user_booking.html");
-}
-
-//bus tracking
-function moveBus(){
-    const bus = document.getElementById("bus");
-    if(bus){
-        let currentLeft = parseInt(bus.style.left) || 20;
-        let newLeft = currentLeft + Math.floor(Math.random()*50);
-        if(newLeft > 300) newLeft = 20;
-        bus.style.left = newLeft + "px";
-    }
-}
-
-document.addEventListener("DOMContentLoaded",()=>{
-    if(window.location.pathname.includes("user_payment.html")){
-        const booking = JSON.parse(localStorage.getItem("user_booking"));
-        if(booking){
-            const payBtn = document.querySelector(".btn-success.btn-animate");
-            if(payBtn) payBtn.innerText = `Pay ₹${booking.fare}`;
+                paymentDone();
+            });
         }
     }
 });
+
+// =======================
+// PAYMENT DONE – SAVE BOOKING
+// =======================
+function paymentDone() {
+    const bus_id = localStorage.getItem("booking_busId");
+    const route = localStorage.getItem("booking_route");
+    const fare = localStorage.getItem("booking_fare");
+    const seat = localStorage.getItem("booking_seat");
+
+    $.ajax({
+        url: "api/save_booking.php",
+        type: "POST",
+        data: {
+            bus_id: bus_id,
+            route: route,
+            fare: fare,
+            seat: seat
+        },
+        success: function() {
+            alert("Booking Successful!");
+
+            localStorage.removeItem("booking_busId");
+            localStorage.removeItem("booking_route");
+            localStorage.removeItem("booking_fare");
+            localStorage.removeItem("booking_seat");
+
+            window.location.href = "user_index.html";
+        },
+        error: function(xhr, status, error) {
+            console.error(xhr.responseText);
+            alert("Error processing booking. Please try again.");
+        }
+    });
+}
+
+// =======================
+// BUS TRACKING
+// =======================
+function moveBus() {
+    const bus = document.getElementById("bus");
+    if (bus) {
+        let currentLeft = parseInt(bus.style.left) || 20;
+        let newLeft = currentLeft + Math.floor(Math.random() * 50);
+        if (newLeft > 300) newLeft = 20;
+        bus.style.left = newLeft + "px";
+    }
+}

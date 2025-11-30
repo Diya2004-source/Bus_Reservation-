@@ -4,10 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bus Reservation - Home</title>
+
 <link rel="stylesheet" href="user_style.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<script src="user_script.js?v=1" defer></script>
+
+<!-- Load jQuery FIRST -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Load your script AFTER jQuery -->
+<script src="user_script.js?v=1"></script>
 </head>
+
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-success">
@@ -30,6 +37,7 @@
 <div class="container mt-5">
   <div class="card card-custom p-4 shadow">
     <h3 class="text-center mb-3">Search Your Bus</h3>
+
     <div class="row g-3">
       <div class="col-md-5">
         <input type="text" class="form-control" id="from" placeholder="From">
@@ -38,22 +46,18 @@
         <input type="text" class="form-control" id="to" placeholder="To">
       </div>
       <div class="col-md-2 d-grid">
-        <button class="btn btn-success btn-animate" onclick="searchBus()">Search</button>
+        <button class="btn btn-success" onclick="searchBus()">Search</button>
       </div>
     </div>
   </div>
-  <div id="busList" class="mt-3"></div>
+
+  <div id="busList" class="mt-4"></div>
 </div>
 
-<footer>
+<footer class="text-center mt-5 p-3 bg-dark text-white">
   © Bus Reservation | MCA Project
-  <br>
-  <a href="user_index.html">Home</a> | 
-  <a href="user_booking.html">Booking</a> | 
-  <a href="user_track.html">Track</a> | 
-  <a href="user_payment.html">Payment</a>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
