@@ -1,131 +1,116 @@
+/* =======================
+   GLOBAL STYLE
+======================= */
 body {
-    background: url("images/home.jpg") no-repeat center center fixed;
-    background-size: cover;
-    font-family: 'Segoe UI', sans-serif;
-    margin: 0;
-    padding: 0;
-    min-height: 100vh; 
-    display: flex;
-    flex-direction: column;
+    background: #f4f6f9;
+    font-family: Arial, sans-serif;
 }
 
-.container {
-    flex: 1; 
+h3, h4 {
+    font-weight: bold;
 }
 
+/* =======================
+   NAVBAR
+======================= */
 .navbar {
-    background-color: #28a745 !important; 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    margin-bottom: 20px;
 }
 
-.navbar .nav-link {
-    color: #fff !important;
-    transition: 0.3s;
+/* =======================
+   BUS CARD
+======================= */
+.card {
+    border-radius: 10px;
+    border: 1px solid #d1d1d1;
+    background: white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
-.navbar .nav-link:hover {
-    color: #ffc107 !important; 
-    text-decoration: underline;
+.card h4 {
+    color: #2c6e49;
 }
 
-.navbar-brand {
-    color: #fff !important;
+.card button {
+    width: 120px;
 }
 
-.card-custom {
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(6px);
-    border-radius: 15px;
-    transition: 0.3s;
-}
-
-.card-custom:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 25px rgba(0,0,0,0.3);
-}
-
-.btn-animate {
-    transition: all 0.3s ease;
-    transform: translateY(0);
-}
-
-.btn-animate:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-}
-
-.btn-primary:hover {
-    background-color: #218838;
-    border-color: #1e7e34;
-}
-
-.btn-success:hover {
-    background-color: #28a745;
-    border-color: #218838;
-}
-
-.btn-warning:hover {
-    background-color: #e0a800;
-    border-color: #d39e00;
-}
-
-footer {
-    background-color: rgba(0,0,0,0.8);
-    color: #fff;
+/* =======================
+   SEAT AREA
+======================= */
+#seatArea {
+    margin-top: 20px;
     text-align: center;
-    padding: 1rem;
-    margin-top: auto; 
+}
+
+.seat-btn {
+    width: 70px;
+    height: 55px;
+    border-radius: 8px;
+    border: none;
+    font-size: 18px;
+    color: #fff;
+    background: #198754; /* green */
+    transition: 0.3s ease;
+}
+
+.seat-btn:hover:not([disabled]) {
+    background: #146c43;
+    transform: scale(1.08);
+}
+
+.seat-btn:disabled {
+    background: #dc3545; /* red */
+    cursor: not-allowed;
+}
+
+/* =======================
+   PAYMENT PAGE
+======================= */
+.payment-box {
+    max-width: 450px;
+    margin: auto;
+    padding: 20px;
+    border-radius: 10px;
+    background: white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.payment-box input {
+    margin-bottom: 10px;
+}
+
+/* =======================
+   FOOTER
+======================= */
+footer {
+    text-align: center;
+    background: #2c6e49;
+    color: white;
+    padding: 18px;
+    margin-top: 40px;
 }
 
 footer a {
-    color: #ffc107;
-    font-weight: bold;
-    transition: 0.3s;
+    color: #d4ffd9;
+    text-decoration: none;
 }
 
 footer a:hover {
-    color: #fff;
     text-decoration: underline;
 }
 
-input.form-control {
-    border-radius: 8px;
-    padding: 10px;
-    transition: 0.3s;
-}
+/* =======================
+   RESPONSIVE
+======================= */
+@media (max-width: 576px) {
+    .seat-btn {
+        width: 55px;
+        height: 45px;
+        font-size: 16px;
+    }
 
-input.form-control:focus {
-    border-color: #28a745;
-    box-shadow: 0 0 5px rgba(40,167,69,0.5);
-}
-
-#map {
-    height: 350px;
-    background: #f8f9fa;
-    border-radius: 15px;
-    position: relative;
-    overflow: hidden;
-}
-
-#bus {
-    width: 45px;
-    position: absolute;
-    top: 150px;
-    left: 20px;
-    transition: 1s;
-}
-
-#qrDiv {
-    text-align: center;
-}
-
-#qrDiv img {
-    border: 5px solid #28a745;
-    border-radius: 15px;
-    transition: 0.3s;
-}
-
-#qrDiv img:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    .card button {
+        width: 100%;
+    }
 }
