@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Tracker</title>
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+     <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    
+                    Bus-Reservation 
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#" class="nav-link active" data-section="home">Home</a></li>
+                    <li><a href="#" class="nav-link" data-section="search">Search Buses</a></li>
+                    <li><a href="#" class="nav-link" data-section="dashboard" id="dashboardLink" style="display:none;"> Dashboard</a></li>
+                    <li><a href="#" class="nav-link" data-section="bookings" id="bookingsLink" style="display:none;"> My Bookings</a></li>
+                </ul>
+                <div class="auth-buttons" id="authButtons">
+                    <button class="login-btn" id="loginBtn"> Login</button>
+                    <button class="register-btn" id="registerBtn"> Register</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationText"></span>
+    </div>
+
+    <!-- Home Section -->
+    <section class="hero" id="homeSection">
+        <div class="container">
+            <h1>Travel Smarter with Bus - Reservation</h1>
+            <p>Book bus tickets online with ease. Find the best routes, compare fares, and enjoy comfortable journeys across the country.</p>
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <section class="search-section" id="searchSection">
+        <div class="container">
+            <h2 style="margin-bottom: 20px; text-align: center;">Find Your Perfect</h2>
+            <form class="search-form" id="searchForm">
+                <div class="form-group">
+                    <label for="from">From</label>
+                    <select id="from">
+                        <option value="">Select Departure Point</option>
+                        <option value="railway-station">Rajkot</option>
+                        <option value="bus-stand">Surat</option>
+                        <option value="airport">Mumbai</option>
+                        <option value="mavdi">Morbi</option>
+                        <option value="kalawad">Jamnagar</option>
+                        <option value="university">Ahmedabad</option>
+                        <option value="race-course">Bangalore</option>
+                        <option value="gondal">Kolkata</option>
+                    </select>
+                    <div class="validation-message error" id="fromError">Please select a departure point</div>
+                </div>
+                <div class="form-group">
+                    <label for="to">To</label>
+                    <select id="to">
+                        <option value="">Select Destination</option>
+                        <option value="railway-station">Rajkot</option>
+                        <option value="bus-stand">Surat</option>
+                        <option value="airport">Mumbai</option>
+                        <option value="mavdi">Morbi</option>
+                        <option value="kalawad">Jamnagar</option>
+                        <option value="university">Ahmedabad</option>
+                        <option value="race-course">Bangalore</option>
+                        <option value="gondal">Kolkata</option>
+                    </select>
+                    <div class="validation-message error" id="toError">Please select a destination</div>
+                </div>
+                <div class="form-group">
+                    <label for="date">Date</label>
+                    <input type="date" id="date">
+                    <div class="validation-message error" id="dateError">Please select a valid date</div>
+                </div>
+                <button type="submit" class="search-btn">
+                    <i class="fas fa-search"></i> Search Buses
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="featuresSection">
+        <div class="container">
+            <h2 class="section-title">Why Choose Us?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-bus"></i></div>
+                    <h3>Wide Bus Network</h3>
+                    <p>Access to all bus routes across India.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-rupee-sign"></i></div>
+                    <h3>Affordable Prices</h3>
+                    <p>Get the lowest fares with our special student and senior citizen discounts.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h3>Safe & Secure</h3>
+                    <p>Your payments and personal information are protected with encryption.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-clock"></i></div>
+                    <h3>On-time Service</h3>
+                    <p>Punctual departures across all routes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Section -->
+    <section class="dashboard-section" id="dashboardSection">
+        <div class="container">
+            <div class="dashboard-header">
+                <h2 class="section-title">Dashboard</h2>
+                <div class="welcome-message" id="welcomeMessage">
+                    Welcome back, <span id="userName"></span>!
+                </div>
+            </div>
+            
+            <div class="dashboard-grid">
+                <div class="dashboard-card stats-card">
+                    <div class="stats-number" id="totalBookings">0</div>
+                    <div class="stats-label">Total Bookings</div>
+                </div>
+                <div class="dashboard-card stats-card">
+                    <div class="stats-number" id="upcomingTrips">0</div>
+                    <div class="stats-label">Upcoming Trips</div>
+                </div>
+                <div class="dashboard-card stats-card">
+                    <div class="stats-number">₹<span id="totalSpent">0</span></div>
+                    <div class="stats-label">Total Spent</div>
+                </div>
+                <div class="dashboard-card">
+                    <h3 style="margin-bottom: 15px;">Quick Actions</h3>
+                    <div class="quick-actions">
+                        <button class="action-btn" id="quickSearch">
+                            <i class="fas fa-search"></i> Search Buses
+                        </button>
+                        <button class="action-btn" id="viewBookings">
+                            <i class="fas fa-ticket-alt"></i> View Bookings
+                        </button>
+                        <button class="action-btn" id="editProfile">
+                            <i class="fas fa-user-edit"></i> Edit Profile
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="booking-history">
+                <h3 style="margin-bottom: 20px;">Recent Bookings</h3>
+                <div id="recentBookings">
+                    <!-- Recent bookings will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bus List Section -->
+    <section class="bus-list" id="busListSection">
+        <div class="container">
+            <div class="search-results-header">
+                <h2 class="section-title">Available Buses</h2>
+                <div class="results-count" id="resultsCount"></div>
+                <button class="search-btn" id="modifySearch">
+                    <i class="fas fa-edit"></i> Modify Search
+                </button>
+            </div>
+            
+            <div class="time-filter" id="timeFilter">
+                <button class="time-filter-btn active" data-time="all">All Times</button>
+                <button class="time-filter-btn" data-time="morning">🌅 Morning (5AM-12PM)</button>
+                <button class="time-filter-btn" data-time="afternoon">☀️ Afternoon (12PM-5PM)</button>
+                <button class="time-filter-btn" data-time="evening">🌇 Evening (5PM-10PM)</button>
+            </div>
+            
+            <div id="busResults">
+                <!-- Bus results will be displayed here dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Bookings Section -->
+    <section class="bus-list" id="bookingsSection">
+        <div class="container">
+            <h2 class="section-title">My Bookings</h2>
+            <div class="tabs" style="margin-bottom: 20px;">
+                <button class="tab active" data-filter="all">All Bookings</button>
+                <button class="tab" data-filter="upcoming">Upcoming</button>
+                <button class="tab" data-filter="completed">Completed</button>
+                <button class="tab" data-filter="cancelled">Cancelled</button>
+            </div>
+            <div id="userBookings">
+                <!-- User bookings will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Login/Register Modal -->
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Login to Your Account</h2>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <div class="tabs">
+                <button class="tab active" id="loginTab">Login</button>
+                <button class="tab" id="registerTab">Register</button>
+            </div>
+            <div class="tab-content active" id="loginContent">
+                <form id="loginForm">
+                    <input type="email" class="form-input" id="loginEmail" placeholder="Email Address">
+                    <div class="validation-message error" id="loginEmailError">Please enter a valid email address</div>
+                    
+                    <input type="password" class="form-input" id="loginPassword" placeholder="Password">
+                    <div class="validation-message error" id="loginPasswordError">Password must be at least 6 characters</div>
+                    
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                </form>
+                <div class="auth-links">
+                    <a href="#" id="forgotPasswordLink">Forgot Password?</a>
+                    <a href="#" id="switchToRegister">Don't have an account? Register</a>
+                </div>
+            </div>
+            <div class="tab-content" id="registerContent">
+                <form id="registerForm">
+                    <input type="text" class="form-input" id="regName" placeholder="Full Name">
+                    <div class="validation-message error" id="regNameError">Please enter your full name (at least 2 characters)</div>
+                    
+                    <input type="email" class="form-input" id="regEmail" placeholder="Email Address">
+                    <div class="validation-message error" id="regEmailError">Please enter a valid email address</div>
+                    
+                    <input type="tel" class="form-input" id="regPhone" placeholder="Phone Number">
+                    <div class="validation-message error" id="regPhoneError">Please enter a valid 10-digit phone number</div>
+                    
+                    <input type="password" class="form-input" id="regPassword" placeholder="Password">
+                    <div class="validation-message error" id="regPasswordError">Password must be at least 6 characters</div>
+                    
+                    <input type="password" class="form-input" id="regConfirmPassword" placeholder="Confirm Password">
+                    <div class="validation-message error" id="regConfirmPasswordError">Passwords do not match</div>
+                    
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-user-plus"></i> Create Account
+                    </button>
+                </form>
+                <div class="auth-links">
+                    <a href="#" id="switchToLogin">Already have an account? Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div class="modal" id="forgotPasswordModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Reset Your Password</h2>
+                <button class="close-btn" id="closeForgotModal">&times;</button>
+            </div>
+            <div id="forgotPasswordForm">
+                <div class="success-message" id="forgotSuccessMessage">
+                    <i class="fas fa-check-circle"></i> Password reset link has been sent to your email!
+                </div>
+                <p style="margin-bottom: 20px; color: var(--text-light);">Enter your email address and we'll send you a link to reset your password.</p>
+                <form id="forgotPasswordFormElement">
+                    <input type="email" class="form-input" id="forgotEmail" placeholder="Email Address">
+                    <div class="validation-message error" id="forgotEmailError">Please enter a valid email address</div>
+                    
+                    <button type="submit" class="submit-btn">Send Reset Link</button>
+                </form>
+                <div class="back-to-login">
+                    <a href="#" id="backToLogin">Back to Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seat Selection Modal -->
+    <div class="seat-selection" id="seatSelectionModal">
+        <div class="seat-container">
+            <div class="modal-header">
+                <h2 class="modal-title">Select Your Seats</h2>
+                <button class="close-btn" id="closeSeatModal">&times;</button>
+            </div>
+            
+            <div class="bus-info" style="margin: 20px 0; padding: 15px; background-color: var(--light-mint); border-radius: 8px;">
+                <h3 id="selectedBusName"></h3>
+                <p id="selectedBusRoute"></p>
+                <p>Departure: <span id="selectedBusTime"></span> | Fare: ₹<span id="selectedBusFare"></span> per seat</p>
+            </div>
+            
+            <div class="seat-layout" id="seatLayout">
+                <!-- Seats will be generated dynamically -->
+            </div>
+            
+            <div class="seat-info">
+                <div class="seat-legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: white; border: 2px solid var(--dark-mint);"></div>
+                        <span>Available</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: var(--dark-mint);"></div>
+                        <span>Selected</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: var(--text-light);"></div>
+                        <span>Booked</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="seat-total">
+                Seats Selected: <span id="selectedSeatsCount">0</span> | 
+                Total Amount: ₹<span id="totalAmount">0</span>
+            </div>
+            
+            <button class="submit-btn" id="proceedToPayment">
+                <i class="fas fa-credit-card"></i> Proceed to Payment
+            </button>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal" id="paymentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Complete Your Booking</h2>
+                <button class="close-btn" id="closePaymentModal">&times;</button>
+            </div>
+            
+            <div id="paymentSummary">
+                <!-- Payment summary will be loaded here -->
+            </div>
+            
+            <div class="payment-options">
+                <div class="payment-option" data-method="upi">
+                    <div class="payment-icon"><i class="fas fa-mobile-alt"></i></div>
+                    <div>
+                        <h4>UPI Payment</h4>
+                        <p>Pay using UPI apps</p>
+                    </div>
+                </div>
+                <div class="payment-option" data-method="card">
+                    <div class="payment-icon"><i class="fas fa-credit-card"></i></div>
+                    <div>
+                        <h4>Credit/Debit Card</h4>
+                        <p>Pay using your card</p>
+                    </div>
+                </div>
+                <div class="payment-option" data-method="netbanking">
+                    <div class="payment-icon"><i class="fas fa-university"></i></div>
+                    <div>
+                        <h4>Net Banking</h4>
+                        <p>Pay using net banking</p>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="submit-btn" id="confirmPayment" disabled>
+                <i class="fas fa-lock"></i> Pay Now
+            </button>
+        </div>
+    </div>
+
+    <!-- Profile Edit Modal -->
+    <div class="modal" id="profileModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Edit Profile</h2>
+                <button class="close-btn" id="closeProfileModal">&times;</button>
+            </div>
+            
+            <form id="profileForm">
+                <input type="text" class="form-input" id="profileName" placeholder="Full Name">
+                <div class="validation-message error" id="profileNameError"></div>
+                
+                <input type="email" class="form-input" id="profileEmail" placeholder="Email Address" readonly>
+                <div class="validation-message info" style="display:block;">Email cannot be changed</div>
+                
+                <input type="tel" class="form-input" id="profilePhone" placeholder="Phone Number">
+                <div class="validation-message error" id="profilePhoneError"></div>
+                
+                <input type="password" class="form-input" id="profilePassword" placeholder="New Password (leave blank to keep current)">
+                <div class="validation-message error" id="profilePasswordError"></div>
+                
+                <input type="password" class="form-input" id="profileConfirmPassword" placeholder="Confirm New Password">
+                <div class="validation-message error" id="profileConfirmPasswordError"></div>
+                
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>GreenRide Rajkot</h3>
+                    <p>Your trusted partner for comfortable and affordable bus travel in Rajkot city.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Popular Routes</h3>
+                    <ul>
+                        <li><a href="#" class="popular-route" data-from="railway-station" data-to="airport">Railway Station to Airport</a></li>
+                        <li><a href="#" class="popular-route" data-from="bus-stand" data-to="university">Bus Stand to University</a></li>
+                        <li><a href="#" class="popular-route" data-from="mavdi" data-to="race-course">Mavdi to Race Course</a></li>
+                        <li><a href="#" class="popular-route" data-from="kalawad" data-to="gondal">Kalawad to Gondal Road</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Cancellation Policy</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <ul>
+                        <li>Email: support@greenriderajkot.com</li>
+                        <li>Phone: +91 98765 43210</li>
+                        <li>Address: 123 Bus Terminal, Rajkot, Gujarat</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2023 GreenRide Rajkot. All rights reserved.
+            </div>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+
+</body>
+</html>
