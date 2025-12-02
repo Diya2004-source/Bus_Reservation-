@@ -1,6 +1,4 @@
-// =======================
 // SEARCH BUS
-// =======================
 function searchBus() {
     const from = $("#from").val().trim();
     const to = $("#to").val().trim();
@@ -46,9 +44,7 @@ function searchBus() {
     });
 }
 
-// =======================
 // OPEN SEATS ON BOOK CLICK
-// =======================
 $(document).on("click", ".book-btn", function () {
     const busId = $(this).data("id");
     const route = $(this).data("route");
@@ -76,7 +72,7 @@ $(document).on("click", ".book-btn", function () {
             html += "</div><div id='selectedSeat' class='mt-3 text-center'></div>";
 
             $("#seatArea").html(html);
-            $("#busList").html(""); // clear bus list for clean UI
+            $("#busList").html(""); 
         },
         error: function() {
             alert("Error fetching seats. Please try again.");
@@ -84,12 +80,10 @@ $(document).on("click", ".book-btn", function () {
     });
 });
 
-// =======================
 // SELECT SEAT
-// =======================
 $(document).on("click", ".seat-btn", function () {
-    $(".seat-btn").removeClass("btn-success").addClass("btn-outline-success");
-    $(this).removeClass("btn-outline-success").addClass("btn-success");
+    $(".seat-btn").removeClass("btn-warning");
+    $(this).addClass("btn-warning");
 
     const seat = $(this).data("seat");
     localStorage.setItem("booking_seat", seat);
@@ -102,16 +96,14 @@ $(document).on("click", ".seat-btn", function () {
     `);
 });
 
-// =======================
+
+
 // PROCEED TO PAYMENT
-// =======================
 $(document).on("click", "#payNow", function () {
     window.location.href = "user_payment.html";
 });
 
-// =======================
 // PAYMENT PAGE LOGIC
-// =======================
 $(document).ready(function () {
     if (window.location.pathname.includes("user_payment.html")) {
         const fare = localStorage.getItem("booking_fare");
@@ -140,9 +132,7 @@ $(document).ready(function () {
     }
 });
 
-// =======================
 // SAVE BOOKING
-// =======================
 function paymentDone() {
     $.ajax({
         url: "api/save_booking.php",

@@ -1,22 +1,18 @@
 
 body {
-    background: url(../Project/images/home.jpg) no-repeat center center fixed;
+    background: url(../Project/images/homepage.jpg) no-repeat center center fixed;
     background-size: cover;
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
 }
 
-/* =======================
-   NAVBAR
-======================= */
+/*   NAVBAR*/
 .navbar {
     margin-bottom: 20px;
 }
 
-/* =======================
-   SEARCH CARD (Home Page)
-======================= */
+/*SEARCH CARD (Home Page)*/
 .card-custom {
     background: rgba(255, 255, 255, 0.92);
     padding: 25px;
@@ -24,9 +20,7 @@ body {
     box-shadow: 0 2px 8px rgba(0,0,0,0.25);
 }
 
-/* =======================
-   BUS CARD
-======================= */
+/*   BUS CARD*/
 .card {
     border-radius: 10px;
     border: 1px solid #d1d1d1;
@@ -43,9 +37,8 @@ body {
     width: 120px;
 }
 
-/* =======================
-   SEAT AREA
-======================= */
+/*   SEAT AREA*/
+/* SEAT AREA */
 #seatArea {
     margin-top: 20px;
     text-align: center;
@@ -55,42 +48,35 @@ body {
     width: 70px;
     height: 55px;
     border-radius: 8px;
-    border: none;
+    border: 2px solid #000; /* black border */
     font-size: 17px;
-    color: #fff;
-    background: #198754; /* green */
+    font-weight: bold;
+    color: #000 !important; /* text black */
+    background: yellow !important; /* yellow background */
     transition: 0.3s ease;
 }
 
 .seat-btn:hover:not([disabled]) {
-    background: #146c43;
+    background: #ffea00 !important; /* brighter yellow */
     transform: scale(1.08);
 }
 
 .seat-btn:disabled {
-    background: #dc3545; /* red */
+    background: #dc3545 !important; /* red for booked */
+    color: #fff !important;
+    border-color: #721c24;
     cursor: not-allowed;
 }
 
-/* =======================
-   PAYMENT PAGE
-======================= */
-.payment-box {
-    max-width: 450px;
-    margin: auto;
-    padding: 20px;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.95);
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+/* Selected seat green */
+.seat-btn.btn-success {
+    background: #28a745 !important;
+    color: #fff !important;
+    border-color: #1e7e34;
 }
 
-.payment-box input {
-    margin-bottom: 10px;
-}
 
-/* =======================
-   FOOTER
-======================= */
+/*   FOOTER*/
 footer {
     text-align: center;
     background: #2c6e49;
@@ -108,9 +94,7 @@ footer a:hover {
     text-decoration: underline;
 }
 
-/* =======================
-   RESPONSIVE
-======================= */
+/*   RESPONSIVE*/
 @media (max-width: 576px) {
     .seat-btn {
         width: 55px;
