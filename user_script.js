@@ -47,10 +47,7 @@ function searchBus() {
 }
 
 // =======================
-// OPEN SEATS
-// =======================
-// =======================
-// OPEN SEATS WITH BOOKED SEATS CHECK
+// OPEN SEATS ON BOOK CLICK
 // =======================
 $(document).on("click", ".book-btn", function () {
     const busId = $(this).data("id");
@@ -61,20 +58,18 @@ $(document).on("click", ".book-btn", function () {
     localStorage.setItem("booking_route", route);
     localStorage.setItem("booking_fare", fare);
 
-    // Fetch booked seats for this bus
+    // Fetch booked seats
     $.ajax({
         url: "api/get_seats.php",
         type: "GET",
         data: { bus_id: busId },
         success: function(res) {
             const bookedSeats = JSON.parse(res).map(s => s.seat); // array of booked seat numbers
-
             let html = "<h3 class='text-center mt-3'>Select Your Seat</h3><div class='mt-3 text-center'>";
 
-            for (let i = 1; i <= 30; i++) { // 30 seats per bus
+            for (let i = 1; i <= 30; i++) {
                 const disabled = bookedSeats.includes(i.toString()) ? "disabled" : "";
                 const btnClass = bookedSeats.includes(i.toString()) ? "btn-secondary" : "btn-outline-success";
-
                 html += `<button class="seat-btn btn ${btnClass} m-2" data-seat="${i}" ${disabled}>Seat ${i}</button>`;
             }
 
@@ -88,7 +83,6 @@ $(document).on("click", ".book-btn", function () {
         }
     });
 });
-
 
 // =======================
 // SELECT SEAT
