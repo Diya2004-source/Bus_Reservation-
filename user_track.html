@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Track Bus</title>
+<link rel="stylesheet" href="user_style.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<style>
+  html, body {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+
+  .card-custom {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+  }
+
+  #map {
+    height: 400px;
+    width: 100%;
+    border-radius: 10px;
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #212529;
+    color: white;
+  }
+
+  .btn-animate:hover {
+    transform: scale(1.02);
+    transition: 0.2s;
+  }
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-success">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="user_index.html">Bus Reservation</a>
+    <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="nav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="user_index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="user_booking.html">Booking</a></li>
+        <li class="nav-item"><a class="nav-link active" href="user_track.html">Track Bus</a></li>
+        <li class="nav-item"><a class="nav-link" href="user_payment.html">Payment</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-5">
+  <div class="card card-custom p-4 shadow">
+    <h3 class="text-center">Live Bus Location</h3>
+    <div id="map" class="mt-3 shadow"></div>
+    <button class="btn btn-success btn-animate w-100 mt-3" onclick="moveBus()">Update Location</button>
+  </div>
+</div>
+
+<footer>
+  © Bus Reservation | MCA Project
+  <br>
+  <a href="user_index.html">Home</a> | 
+  <a href="user_booking.html">Booking</a> | 
+  <a href="user_track.html">Track</a> | 
+  <a href="user_payment.html">Payment</a>
+</footer>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  // Initialize map
+  const map = L.map('map').setView([19.0760, 72.8777], 13); // Example: Mumbai coordinates
+
+  // Add OpenStreetMap tiles
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+  }).addTo(map);
+
+  // Initial bus marker
+  let busMarker = L.marker([19.0760, 72.8777]).addTo(map)
+      .bindPopup('Bus is here')
+      .openPopup();
+
+  // Example: Move bus to new random location nearby
+  function moveBus() {
+      // Generate small random shift
+      const latShift = (Math.random() - 0.5) / 100;
+      const lngShift = (Math.random() - 0.5) / 100;
+      const newLat = busMarker.getLatLng().lat + latShift;
+      const newLng = busMarker.getLatLng().lng + lngShift;
+
+      busMarker.setLatLng([newLat, newLng])
+               .bindPopup('Bus updated location')
+               .openPopup();
+
+      map.panTo([newLat, newLng]);
+  }
+</script>
+
+</body>
+</html>
