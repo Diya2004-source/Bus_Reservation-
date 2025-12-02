@@ -9,6 +9,17 @@
 <script src="user_script.js?v=1" defer></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="assets/js/app.js"></script>
+<style>
+  body {
+    display:flex;
+    flex-direction:column;
+  }
+   footer {
+    flex-shrink: 0;
+    background-color: rgba(33, 37, 41, 0.85);
+    color: white;
+  }
+</style>
 </head>
 <body>
 
@@ -50,7 +61,7 @@
 </div>
 
 <!-- Footer -->
-<footer>
+<footer class="text-center p-3">
   © Bus Reservation | MCA Project
   <br>
   <a href="user_index.html">Home</a> | 
