@@ -1,71 +1,49 @@
- // Comprehensive bus data with routes for EVERY combination
-        // We have 8 locations, so 56 possible routes (8x7)
+ // Bus data configuration
+        const busTypes = ['AC', 'Non-AC', 'AC Sleeper'];
+        const frequencies = ['Every 1 hour'];
         
         const locations = {
-            'railway-station': 'Rajkot Railway Station',
-            'bus-stand': 'Rajkot Bus Stand',
-            'airport': 'Rajkot Airport',
-            'mavdi': 'Mavdi Circle',
-            'kalawad': 'Kalawad Road',
-            'university': 'RK University',
-            'race-course': 'Race Course',
-            'gondal': 'Gondal Road'
+            'rajkot': 'Rajkot',
+            'surat': 'Surat',
+            'mumbai': 'Mumbai',
+            'morbi': 'Morbi',
+            'jamnagar': 'Jamnagar',
+            'ahmedabad': 'Ahmedabad',
+            'bangalore': 'Bangalore',
+            'kolkata': 'Kolkata'
         };
 
-        // Helper function to generate bus routes for all combinations
+        // Generate comprehensive bus data
         function generateAllBusRoutes() {
             const allBuses = [];
             let busId = 1;
             
             const locationKeys = Object.keys(locations);
             
-            // Generate buses for all possible combinations
             for (let i = 0; i < locationKeys.length; i++) {
                 for (let j = 0; j < locationKeys.length; j++) {
-                    if (i === j) continue; // Skip same from and to
+                    if (i === j) continue;
                     
                     const fromKey = locationKeys[i];
                     const toKey = locationKeys[j];
                     const fromName = locations[fromKey];
                     const toName = locations[toKey];
                     
-                    // Generate 2-3 buses per route (morning, afternoon, evening)
-                    const busTypes = ['AC', 'Non-AC', 'AC Sleeper'];
-                    const frequencies = ['Every 30 minutes', 'Every 45 minutes', 'Every 1 hour'];
-                    const amenitiesList = [
-                        ['WiFi', 'Charging Ports', 'AC', 'Water Bottle'],
-                        ['Comfort Seats', 'Water Bottle'],
-                        ['WiFi', 'AC', 'Entertainment'],
-                        ['WiFi', 'AC', 'Blanket', 'Snacks']
-                    ];
+                    // Generate buses for different times
+                    const timeSlots = ['morning', 'afternoon'];
                     
-                    // Create morning bus
-                    allBuses.push(createBus(
-                        busId++, 
-                        fromKey, 
-                        toKey, 
-                        fromName, 
-                        toName, 
-                        'morning',
-                        busTypes[busId % 3],
-                        frequencies[busId % 3],
-                        amenitiesList[busId % 4]
-                    ));
+                    timeSlots.forEach(timeOfDay => {
+                        allBuses.push(createBus(
+                            busId++, 
+                            fromKey, 
+                            toKey, 
+                            fromName, 
+                            toName, 
+                            timeOfDay
+                        ));
+                    });
                     
-                    // Create afternoon bus
-                    allBuses.push(createBus(
-                        busId++, 
-                        fromKey, 
-                        toKey, 
-                        fromName, 
-                        toName, 
-                        'afternoon',
-                        busTypes[(busId + 1) % 3],
-                        frequencies[(busId + 1) % 3],
-                        amenitiesList[(busId + 1) % 4]
-                    ));
-                    
-                    // Create evening bus for popular routes
+                    // Add evening buses for popular routes
                     if (isPopularRoute(fromKey, toKey)) {
                         allBuses.push(createBus(
                             busId++, 
@@ -73,10 +51,7 @@
                             toKey, 
                             fromName, 
                             toName, 
-                            'evening',
-                            busTypes[(busId + 2) % 3],
-                            frequencies[(busId + 2) % 3],
-                            amenitiesList[(busId + 2) % 4]
+                            'evening'
                         ));
                     }
                 }
@@ -87,13 +62,13 @@
         
         function isPopularRoute(fromKey, toKey) {
             const popularRoutes = [
-                ['railway-station', 'airport'],
-                ['bus-stand', 'university'],
-                ['mavdi', 'race-course'],
-                ['kalawad', 'gondal'],
-                ['railway-station', 'bus-stand'],
-                ['airport', 'university'],
-                ['race-course', 'mavdi']
+                ['rajkot', 'ahmedabad'],
+                ['rajkot', 'surat'],
+                ['morbi', 'rajkot'],
+                ['rajkot', 'mumbai'],
+                ['mumbai', 'bangalore'],
+                ['mumbai', 'pune'],
+                ['bangalore', 'chennai']
             ];
             
             return popularRoutes.some(route => 
@@ -102,18 +77,17 @@
             );
         }
         
-        function createBus(id, fromKey, toKey, fromName, toName, timeOfDay, type, frequency, amenities) {
-            // Determine departure time based on time of day
-            let departureTime, departureMinutes;
+        function createBus(id, fromKey, toKey, fromName, toName, timeOfDay) {
+            let departureMinutes;
             switch(timeOfDay) {
                 case 'morning':
-                    departureMinutes = 6 * 60 + (id % 12) * 30; // 6:00 AM to 12:00 PM
+                    departureMinutes = 6 * 60 + (id % 6) * 30;
                     break;
                 case 'afternoon':
-                    departureMinutes = 12 * 60 + (id % 8) * 45; // 12:00 PM to 6:00 PM
+                    departureMinutes = 12 * 60 + (id % 6) * 45;
                     break;
                 case 'evening':
-                    departureMinutes = 18 * 60 + (id % 6) * 30; // 6:00 PM to 10:00 PM
+                    departureMinutes = 18 * 60 + (id % 4) * 30;
                     break;
             }
             
@@ -121,10 +95,10 @@
             const minutes = departureMinutes % 60;
             const period = hours >= 12 ? 'PM' : 'AM';
             const displayHours = hours > 12 ? hours - 12 : hours;
-            departureTime = `${displayHours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${period}`;
+            const departureTime = `${displayHours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${period}`;
             
-            // Calculate arrival time (add 30-120 minutes)
-            const travelMinutes = 30 + (id % 90); // 30 to 120 minutes
+            // Calculate arrival time
+            const travelMinutes = 120 + (id % 120);
             const arrivalMinutes = departureMinutes + travelMinutes;
             const arrivalHours = Math.floor(arrivalMinutes / 60);
             const arrivalMins = arrivalMinutes % 60;
@@ -132,47 +106,41 @@
             const arrivalDisplayHours = arrivalHours > 12 ? arrivalHours - 12 : arrivalHours;
             const arrivalTime = `${arrivalDisplayHours.toString().padStart(2, '0')}:${arrivalMins.toString().padStart(2, '0')} ${arrivalPeriod}`;
             
-            // Duration string
+            // Duration
             const durationHours = Math.floor(travelMinutes / 60);
             const durationMinutes = travelMinutes % 60;
             const durationStr = durationHours > 0 ? 
                 `${durationHours} hour${durationHours > 1 ? 's' : ''} ${durationMinutes} mins` : 
                 `${durationMinutes} mins`;
             
-            // Generate bus names based on route
+            // Bus name
             const busNames = [
-                `${fromName.split(' ')[0]} Express`,
-                `${fromName.split(' ')[0]} - ${toName.split(' ')[0]} Connect`,
-                `City Shuttle ${fromName.split(' ')[0]}`,
-                `Rajkot ${timeOfDay.charAt(0).toUpperCase() + timeOfDay.slice(1)} Service`,
-                `GreenRide ${fromName.split(' ')[0]} Line`
+                `${fromName} Express`,
+                `${fromName} - ${toName} Connect`,
+                `City Shuttle`,
+                `${timeOfDay.charAt(0).toUpperCase() + timeOfDay.slice(1)} Service`,
+                `Premium Travel`
             ];
             
             const busName = busNames[id % busNames.length];
             
-            // Fare calculation based on distance and type
-            let baseFare = 15 + (id % 35); // 15 to 50
-            if (type.includes('AC')) baseFare += 5;
-            if (type.includes('Sleeper')) baseFare += 10;
+            // Fare calculation
+            let baseFare = 200 + (id % 300);
+            const busType = busTypes[id % 3];
+            if (busType.includes('AC')) baseFare += 50;
+            if (busType.includes('Sleeper')) baseFare += 100;
             
-            // Total seats
-            const totalSeats = [30, 35, 40, 45][id % 4];
+            // Seats
+            const totalSeats = 40;
             const availableSeats = Math.max(5, totalSeats - (id % 20));
             
             // Bus number
-            const busNumber = `RJ01-${String.fromCharCode(65 + (id % 26))}${String.fromCharCode(65 + ((id + 1) % 26))}-${(1000 + id).toString().padStart(4, '0')}`;
+            const busNumber = `BUS${(1000 + id).toString().padStart(4, '0')}`;
             
-            // First and last bus
-            const firstBus = timeOfDay === 'morning' ? '06:00 AM' : 
-                           timeOfDay === 'afternoon' ? '12:00 PM' : '06:00 PM';
-            const lastBus = timeOfDay === 'morning' ? '12:00 PM' : 
-                          timeOfDay === 'afternoon' ? '06:00 PM' : '10:00 PM';
-            
-            // Generate schedule for the day
-            const schedule = generateSchedule(fromName, toName, timeOfDay, frequency);
-            
-            // Generate route stops
-            const routeStops = generateRouteStops(fromName, toName, departureTime, travelMinutes);
+            // Amenities
+            const amenities = busType.includes('AC') ? 
+                ['WiFi', 'Charging Ports', 'Water Bottle', 'AC'] : 
+                ['Comfort Seats', 'Water Bottle'];
             
             return {
                 id: id,
@@ -183,202 +151,36 @@
                 arrival: arrivalTime,
                 duration: durationStr,
                 fare: baseFare,
-                type: type,
+                type: busType,
                 totalSeats: totalSeats,
                 availableSeats: availableSeats,
                 amenities: amenities,
                 route: `${fromName} to ${toName}`,
-                stops: routeStops.length,
                 busNumber: busNumber,
-                frequency: frequency,
-                firstBus: firstBus,
-                lastBus: lastBus,
-                schedule: schedule,
-                routeStops: routeStops,
                 timeOfDay: timeOfDay
             };
         }
         
-        function generateSchedule(fromName, toName, timeOfDay, frequency) {
-            const schedule = [];
-            let startHour, endHour, interval;
-            
-            switch(timeOfDay) {
-                case 'morning':
-                    startHour = 6;
-                    endHour = 12;
-                    break;
-                case 'afternoon':
-                    startHour = 12;
-                    endHour = 18;
-                    break;
-                case 'evening':
-                    startHour = 18;
-                    endHour = 22;
-                    break;
-            }
-            
-            switch(frequency) {
-                case 'Every 30 minutes':
-                    interval = 30;
-                    break;
-                case 'Every 45 minutes':
-                    interval = 45;
-                    break;
-                case 'Every 1 hour':
-                    interval = 60;
-                    break;
-            }
-            
-            let currentMinutes = startHour * 60;
-            while (currentMinutes < endHour * 60) {
-                const hours = Math.floor(currentMinutes / 60);
-                const minutes = currentMinutes % 60;
-                const period = hours >= 12 ? 'PM' : 'AM';
-                const displayHours = hours > 12 ? hours - 12 : hours;
-                const timeStr = `${displayHours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${period}`;
-                
-                schedule.push({
-                    time: timeStr,
-                    from: fromName,
-                    to: toName
-                });
-                
-                currentMinutes += interval;
-            }
-            
-            return schedule.slice(0, 8); // Limit to 8 schedules
-        }
-        
-        function generateRouteStops(fromName, toName, startTime, totalMinutes) {
-            const commonStops = [
-                'Kotecha Chowk',
-                'Jalaram Temple',
-                'Amin Marg',
-                'Metoda GIDC',
-                'Saurashtra University',
-                'Airport Circle',
-                'University Road',
-                'Gondal Road',
-                'Kalawad Road',
-                'Race Course',
-                'Nana Mava Road',
-                'Bhakti Nagar',
-                'Jivraj Park',
-                'Panchnath Plot',
-                'Madhapar Road',
-                'Yagnik Road',
-                'Jagnath Plot',
-                'Gurukul Road'
-            ];
-            
-            // Shuffle and select 4-8 stops
-            const shuffledStops = [...commonStops].sort(() => Math.random() - 0.5);
-            const numStops = 4 + Math.floor(Math.random() * 4);
-            const selectedStops = shuffledStops.slice(0, numStops);
-            
-            // Add start and end stops
-            const allStops = [
-                { name: fromName, time: startTime }
-            ];
-            
-            // Calculate time for each stop
-            let currentMinutes = convertTimeToMinutes(startTime);
-            const interval = Math.floor(totalMinutes / (selectedStops.length + 1));
-            
-            selectedStops.forEach((stop, index) => {
-                currentMinutes += interval;
-                const hours = Math.floor(currentMinutes / 60);
-                const minutes = currentMinutes % 60;
-                const period = hours >= 12 ? 'PM' : 'AM';
-                const displayHours = hours > 12 ? hours - 12 : hours;
-                const timeStr = `${displayHours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${period}`;
-                
-                allStops.push({
-                    name: stop,
-                    time: timeStr
-                });
-            });
-            
-            // Add final destination
-            currentMinutes += interval;
-            const hours = Math.floor(currentMinutes / 60);
-            const minutes = currentMinutes % 60;
-            const period = hours >= 12 ? 'PM' : 'AM';
-            const displayHours = hours > 12 ? hours - 12 : hours;
-            const timeStr = `${displayHours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${period}`;
-            
-            allStops.push({
-                name: toName,
-                time: timeStr
-            });
-            
-            return allStops;
-        }
-        
-        function convertTimeToMinutes(timeStr) {
-            const [time, period] = timeStr.split(' ');
-            let [hours, minutes] = time.split(':').map(Number);
-            
-            if (period === 'PM' && hours !== 12) hours += 12;
-            if (period === 'AM' && hours === 12) hours = 0;
-            
-            return hours * 60 + minutes;
-        }
-        
-        // Generate all bus routes
         const busData = generateAllBusRoutes();
         
-        console.log(`Generated ${busData.length} bus routes for all combinations`);
-
-        // Sample bookings data
-        const sampleBookings = [
-            {
-                id: 1001,
-                busId: 1,
-                userId: 1,
-                date: new Date().toISOString().split('T')[0],
-                seats: ["A1", "A2"],
-                totalAmount: 50,
-                status: "confirmed",
-                bookingDate: new Date().toISOString(),
-                passengerName: "John Doe",
-                paymentMethod: "upi",
-                busDetails: busData[0]
-            },
-            {
-                id: 1002,
-                busId: 3,
-                userId: 1,
-                date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                seats: ["B3"],
-                totalAmount: 15,
-                status: "upcoming",
-                bookingDate: new Date().toISOString(),
-                passengerName: "John Doe",
-                paymentMethod: "card",
-                busDetails: busData[2]
-            }
-        ];
-
         // Database simulation
         class Database {
             constructor() {
-                this.users = JSON.parse(localStorage.getItem('greenRideUsers')) || [];
-                this.bookings = JSON.parse(localStorage.getItem('greenRideBookings')) || sampleBookings;
-                this.busSeats = JSON.parse(localStorage.getItem('greenRideBusSeats')) || {};
+                this.users = JSON.parse(localStorage.getItem('busUsers')) || [];
+                this.bookings = JSON.parse(localStorage.getItem('busBookings')) || [];
+                this.busSeats = JSON.parse(localStorage.getItem('busSeats')) || {};
             }
 
             saveUsers() {
-                localStorage.setItem('greenRideUsers', JSON.stringify(this.users));
+                localStorage.setItem('busUsers', JSON.stringify(this.users));
             }
 
             saveBookings() {
-                localStorage.setItem('greenRideBookings', JSON.stringify(this.bookings));
+                localStorage.setItem('busBookings', JSON.stringify(this.bookings));
             }
 
             saveBusSeats() {
-                localStorage.setItem('greenRideBusSeats', JSON.stringify(this.busSeats));
+                localStorage.setItem('busSeats', JSON.stringify(this.busSeats));
             }
 
             getUserByEmail(email) {
@@ -400,14 +202,18 @@
                 this.bookings.push(booking);
                 this.saveBookings();
                 
-                // Update bus seats
+                // Mark seats as booked
                 this.markSeatsAsBooked(booking.busId, booking.date, booking.seats);
                 
                 return booking;
             }
 
             getBookingsByUser(userId) {
-                return this.bookings.filter(booking => booking.userId === userId);
+                return this.bookings.filter(booking => booking.userId === userId)
+                    .map(booking => {
+                        const bus = busData.find(b => b.id === booking.busId);
+                        return { ...booking, busDetails: bus };
+                    });
             }
 
             cancelBooking(bookingId) {
@@ -429,7 +235,7 @@
                 if (!this.busSeats[key]) {
                     this.busSeats[key] = [];
                 }
-                this.busSeats[key].push(...seats);
+                this.busSeats[key] = [...new Set([...this.busSeats[key], ...seats])];
                 this.saveBusSeats();
             }
 
@@ -444,6 +250,16 @@
             getBookedSeats(busId, date) {
                 const key = `${busId}-${date}`;
                 return this.busSeats[key] || [];
+            }
+
+            updateUser(userId, updates) {
+                const userIndex = this.users.findIndex(u => u.id === userId);
+                if (userIndex !== -1) {
+                    this.users[userIndex] = { ...this.users[userIndex], ...updates };
+                    this.saveUsers();
+                    return this.users[userIndex];
+                }
+                return null;
             }
         }
 
@@ -464,17 +280,7 @@
                 setupEventListeners();
                 setupRealTimeValidation();
                 setDefaultDate();
-                populateRouteCount();
-            }
-            
-            function populateRouteCount() {
-                const routeCount = busData.length;
-                const uniqueRoutes = new Set();
-                busData.forEach(bus => {
-                    uniqueRoutes.add(`${bus.from}-${bus.to}`);
-                });
-                
-                console.log(`Total buses: ${routeCount}, Unique routes: ${uniqueRoutes.size}`);
+                showSection('home');
             }
             
             function setDefaultDate() {
@@ -487,42 +293,42 @@
             }
             
             function setupEventListeners() {
+                // Navigation
+                $('.nav-link').on('click', handleNavigation);
+                
                 // Auth buttons
                 $('#loginBtn').on('click', showLoginModal);
                 $('#registerBtn').on('click', showRegisterModal);
                 
-                // Modal close buttons
+                // Modal controls
                 $('#closeModal').on('click', closeAuthModal);
                 $('#closeForgotModal').on('click', closeForgotModal);
                 $('#closeSeatModal').on('click', closeSeatModal);
                 $('#closePaymentModal').on('click', closePaymentModal);
                 $('#closeProfileModal').on('click', closeProfileModal);
                 
-                // Navigation
-                $('.nav-link').on('click', handleNavigation);
-                $('#modifySearch').on('click', () => showSection('search'));
-                
-                // Dashboard actions
-                $('#quickSearch').on('click', () => showSection('search'));
-                $('#viewBookings').on('click', () => showSection('bookings'));
-                $('#editProfile').on('click', showProfileModal);
-                
                 // Auth modal tabs
-                $('#loginTab').on('click', showLoginTab);
-                $('#registerTab').on('click', showRegisterTab);
-                $('#switchToRegister').on('click', showRegisterTab);
-                $('#switchToLogin').on('click', showLoginTab);
+                $('#loginTab').on('click', () => switchAuthTab('login'));
+                $('#registerTab').on('click', () => switchAuthTab('register'));
+                $('#switchToRegister').on('click', () => switchAuthTab('register'));
+                $('#switchToLogin').on('click', () => switchAuthTab('login'));
                 
                 // Forgot password
                 $('#forgotPasswordLink').on('click', showForgotPasswordModal);
                 $('#backToLogin').on('click', backToLoginFromForgot);
                 
-                // Form submissions
+                // Forms
                 $('#loginForm').on('submit', handleLogin);
                 $('#registerForm').on('submit', handleRegister);
                 $('#searchForm').on('submit', handleSearch);
                 $('#profileForm').on('submit', handleProfileUpdate);
                 $('#forgotPasswordFormElement').on('submit', handleForgotPassword);
+                
+                // Dashboard actions
+                $('#quickSearch').on('click', () => showSection('search'));
+                $('#viewBookings').on('click', () => showSection('bookings'));
+                $('#editProfile').on('click', showProfileModal);
+                $('#modifySearch').on('click', () => showSection('search'));
                 
                 // Seat selection
                 $(document).on('click', '.seat:not(.booked)', handleSeatSelection);
@@ -536,22 +342,39 @@
                 $(document).on('click', '.cancel-booking', cancelBooking);
                 $('.tab[data-filter]').on('click', filterBookings);
                 
+                // Time filter
+                $('.time-filter-btn').on('click', handleTimeFilter);
+                
                 // Popular routes
                 $('.popular-route').on('click', handlePopularRouteClick);
                 
-                // Schedule view toggle
-                $(document).on('click', '.view-schedule-btn', toggleScheduleView);
-                
-                // Time filter buttons
-                $('.time-filter-btn').on('click', handleTimeFilter);
+                // View schedule
+                $(document).on('click', '.view-schedule', toggleScheduleView);
             }
             
-            function showNotification(message, type = 'info') {
+            function showNotification(message, type = 'success') {
                 const notification = $('#notification');
                 const text = $('#notificationText');
                 
                 notification.removeClass('success error info').addClass(type);
                 text.text(message);
+                
+                // Set icon based on type
+                const icon = notification.find('i');
+                icon.removeClass('fa-check-circle fa-exclamation-circle fa-info-circle');
+                
+                switch(type) {
+                    case 'success':
+                        icon.addClass('fa-check-circle');
+                        break;
+                    case 'error':
+                        icon.addClass('fa-exclamation-circle');
+                        break;
+                    case 'info':
+                        icon.addClass('fa-info-circle');
+                        break;
+                }
+                
                 notification.addClass('show');
                 
                 setTimeout(() => {
@@ -560,8 +383,8 @@
             }
             
             function showSection(section) {
-                // Hide all main sections
-                $('.hero, .search-section, .features, .bus-list, .dashboard-section').hide();
+                // Hide all sections
+                $('section').hide();
                 
                 // Remove active class from all nav links
                 $('.nav-link').removeClass('active');
@@ -569,17 +392,13 @@
                 // Show selected section
                 switch(section) {
                     case 'home':
-                        $('#homeSection').show();
-                        $('#featuresSection').show();
+                        $('#homeSection, #featuresSection').show();
                         $('.nav-link[data-section="home"]').addClass('active');
                         break;
                     case 'search':
                         $('#searchSection').show();
                         $('.nav-link[data-section="search"]').addClass('active');
-                        // Scroll to search section
-                        $('html, body').animate({
-                            scrollTop: $('#searchSection').offset().top - 100
-                        }, 500);
+                        $('html, body').animate({ scrollTop: $('#searchSection').offset().top - 100 }, 500);
                         break;
                     case 'dashboard':
                         if (!currentUser) {
@@ -590,6 +409,7 @@
                         $('#dashboardSection').show();
                         loadDashboard();
                         $('.nav-link[data-section="dashboard"]').addClass('active');
+                        $('html, body').animate({ scrollTop: $('#dashboardSection').offset().top - 100 }, 500);
                         break;
                     case 'bookings':
                         if (!currentUser) {
@@ -600,10 +420,12 @@
                         $('#bookingsSection').show();
                         loadUserBookings('all');
                         $('.nav-link[data-section="bookings"]').addClass('active');
+                        $('html, body').animate({ scrollTop: $('#bookingsSection').offset().top - 100 }, 500);
                         break;
                     case 'busList':
                         $('#busListSection').show();
                         $('.nav-link[data-section="search"]').addClass('active');
+                        $('html, body').animate({ scrollTop: $('#busListSection').offset().top - 100 }, 500);
                         break;
                 }
             }
@@ -617,9 +439,13 @@
             function checkLoginState() {
                 const userData = localStorage.getItem('currentUser');
                 if (userData) {
-                    currentUser = JSON.parse(userData);
-                    updateAuthUI();
-                    userBookings = db.getBookingsByUser(currentUser.id);
+                    try {
+                        currentUser = JSON.parse(userData);
+                        updateAuthUI();
+                        userBookings = db.getBookingsByUser(currentUser.id);
+                    } catch (e) {
+                        console.error('Error parsing user data:', e);
+                    }
                 }
             }
             
@@ -634,7 +460,6 @@
                         </button>
                     `);
                     
-                    // Show dashboard and bookings links
                     $('#dashboardLink, #bookingsLink').show();
                     
                     // Attach logout handler
@@ -645,7 +470,6 @@
                         <button class="register-btn" id="registerBtn"><i class="fas fa-user-plus"></i> Register</button>
                     `);
                     
-                    // Hide dashboard and bookings links
                     $('#dashboardLink, #bookingsLink').hide();
                     
                     // Reattach event listeners
@@ -656,29 +480,28 @@
             
             function showLoginModal() {
                 $('#authModal').css('display', 'flex');
-                showLoginTab();
+                switchAuthTab('login');
             }
             
             function showRegisterModal() {
                 $('#authModal').css('display', 'flex');
-                showRegisterTab();
+                switchAuthTab('register');
             }
             
-            function showLoginTab() {
-                $('#loginTab').addClass('active');
-                $('#registerTab').removeClass('active');
-                $('#loginContent').addClass('active');
-                $('#registerContent').removeClass('active');
-                $('#modalTitle').text('Login to Your Account');
-                clearFormErrors();
-            }
-            
-            function showRegisterTab() {
-                $('#registerTab').addClass('active');
-                $('#loginTab').removeClass('active');
-                $('#registerContent').addClass('active');
-                $('#loginContent').removeClass('active');
-                $('#modalTitle').text('Create an Account');
+            function switchAuthTab(tab) {
+                $('#loginTab, #registerTab').removeClass('active');
+                $('#loginContent, #registerContent').removeClass('active');
+                
+                if (tab === 'login') {
+                    $('#loginTab').addClass('active');
+                    $('#loginContent').addClass('active');
+                    $('#modalTitle').text('Login to Your Account');
+                } else {
+                    $('#registerTab').addClass('active');
+                    $('#registerContent').addClass('active');
+                    $('#modalTitle').text('Create an Account');
+                }
+                
                 clearFormErrors();
             }
             
@@ -697,10 +520,13 @@
             
             function closeAuthModal() {
                 $('#authModal').css('display', 'none');
+                clearFormErrors();
             }
             
             function closeForgotModal() {
                 $('#forgotPasswordModal').css('display', 'none');
+                $('#forgotEmail').val('');
+                $('#forgotSuccessMessage').hide();
             }
             
             function closeSeatModal() {
@@ -711,10 +537,125 @@
             function closePaymentModal() {
                 $('#paymentModal').css('display', 'none');
                 selectedPaymentMethod = null;
+                $('.payment-option').removeClass('selected');
+                $('#confirmPayment').prop('disabled', true);
             }
             
             function closeProfileModal() {
                 $('#profileModal').css('display', 'none');
+                clearFormErrors();
+            }
+            
+            function validateEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+            
+            function validatePassword(password) {
+                return password.length >= 6;
+            }
+            
+            function validatePhone(phone) {
+                const re = /^\d{10}$/;
+                return re.test(phone);
+            }
+            
+            function validateName(name) {
+                return name.trim().length >= 2;
+            }
+            
+            function clearFormErrors() {
+                $('.validation-message').hide();
+                $('.form-input').removeClass('error-border success-border');
+            }
+            
+            function showFieldError(fieldId, message) {
+                $(`#${fieldId}Error`).text(message).show();
+                $(`#${fieldId}`).addClass('error-border').removeClass('success-border');
+            }
+            
+            function showFieldSuccess(fieldId) {
+                $(`#${fieldId}Error`).hide();
+                $(`#${fieldId}`).addClass('success-border').removeClass('error-border');
+            }
+            
+            function setupRealTimeValidation() {
+                // Email validation
+                $('#loginEmail, #regEmail, #forgotEmail').on('input', function() {
+                    const email = $(this).val();
+                    const fieldId = $(this).attr('id');
+                    
+                    if (!email) {
+                        $(this).removeClass('error-border success-border');
+                        $(`#${fieldId}Error`).hide();
+                    } else if (validateEmail(email)) {
+                        showFieldSuccess(fieldId);
+                    } else {
+                        showFieldError(fieldId, 'Please enter a valid email address');
+                    }
+                });
+                
+                // Password validation
+                $('#loginPassword, #regPassword, #profilePassword').on('input', function() {
+                    const password = $(this).val();
+                    const fieldId = $(this).attr('id');
+                    
+                    if (!password) {
+                        $(this).removeClass('error-border success-border');
+                        $(`#${fieldId}Error`).hide();
+                    } else if (validatePassword(password)) {
+                        showFieldSuccess(fieldId);
+                    } else {
+                        showFieldError(fieldId, 'Password must be at least 6 characters');
+                    }
+                });
+                
+                // Name validation
+                $('#regName, #profileName').on('input', function() {
+                    const name = $(this).val();
+                    const fieldId = $(this).attr('id');
+                    
+                    if (!name) {
+                        $(this).removeClass('error-border success-border');
+                        $(`#${fieldId}Error`).hide();
+                    } else if (validateName(name)) {
+                        showFieldSuccess(fieldId);
+                    } else {
+                        showFieldError(fieldId, 'Name must be at least 2 characters');
+                    }
+                });
+                
+                // Phone validation
+                $('#regPhone, #profilePhone').on('input', function() {
+                    const phone = $(this).val();
+                    const fieldId = $(this).attr('id');
+                    
+                    if (!phone) {
+                        $(this).removeClass('error-border success-border');
+                        $(`#${fieldId}Error`).hide();
+                    } else if (validatePhone(phone)) {
+                        showFieldSuccess(fieldId);
+                    } else {
+                        showFieldError(fieldId, 'Please enter a valid 10-digit phone number');
+                    }
+                });
+                
+                // Confirm password validation
+                $('#regConfirmPassword, #profileConfirmPassword').on('input', function() {
+                    const confirmPassword = $(this).val();
+                    const fieldId = $(this).attr('id');
+                    const passwordId = fieldId.replace('Confirm', '');
+                    const password = $(`#${passwordId}`).val();
+                    
+                    if (!confirmPassword) {
+                        $(this).removeClass('error-border success-border');
+                        $(`#${fieldId}Error`).hide();
+                    } else if (password === confirmPassword) {
+                        showFieldSuccess(fieldId);
+                    } else {
+                        showFieldError(fieldId, 'Passwords do not match');
+                    }
+                });
             }
             
             function handleLogin(e) {
@@ -722,21 +663,43 @@
                 
                 const email = $('#loginEmail').val();
                 const password = $('#loginPassword').val();
+                let isValid = true;
                 
-                if (!validateEmail(email)) {
-                    showNotification('Please enter a valid email', 'error');
-                    return;
+                // Clear previous errors
+                clearFormErrors();
+                
+                // Validate email
+                if (!email) {
+                    showFieldError('loginEmail', 'Email is required');
+                    isValid = false;
+                } else if (!validateEmail(email)) {
+                    showFieldError('loginEmail', 'Please enter a valid email address');
+                    isValid = false;
                 }
                 
-                if (!validatePassword(password)) {
-                    showNotification('Password must be at least 6 characters', 'error');
-                    return;
+                // Validate password
+                if (!password) {
+                    showFieldError('loginPassword', 'Password is required');
+                    isValid = false;
+                } else if (!validatePassword(password)) {
+                    showFieldError('loginPassword', 'Password must be at least 6 characters');
+                    isValid = false;
                 }
                 
+                if (!isValid) return;
+                
+                // Check credentials
                 const user = db.getUserByEmail(email);
                 
-                if (!user || user.password !== password) {
-                    showNotification('Invalid email or password', 'error');
+                if (!user) {
+                    showNotification('No account found with this email', 'error');
+                    showFieldError('loginEmail', 'No account found with this email');
+                    return;
+                }
+                
+                if (user.password !== password) {
+                    showNotification('Invalid password', 'error');
+                    showFieldError('loginPassword', 'Invalid password');
                     return;
                 }
                 
@@ -758,44 +721,70 @@
                 const phone = $('#regPhone').val();
                 const password = $('#regPassword').val();
                 const confirmPassword = $('#regConfirmPassword').val();
+                let isValid = true;
                 
-                // Validate inputs
-                if (!validateName(name)) {
-                    showNotification('Please enter your full name', 'error');
-                    return;
+                // Clear previous errors
+                clearFormErrors();
+                
+                // Validate name
+                if (!name) {
+                    showFieldError('regName', 'Name is required');
+                    isValid = false;
+                } else if (!validateName(name)) {
+                    showFieldError('regName', 'Name must be at least 2 characters');
+                    isValid = false;
                 }
                 
-                if (!validateEmail(email)) {
-                    showNotification('Please enter a valid email', 'error');
-                    return;
+                // Validate email
+                if (!email) {
+                    showFieldError('regEmail', 'Email is required');
+                    isValid = false;
+                } else if (!validateEmail(email)) {
+                    showFieldError('regEmail', 'Please enter a valid email address');
+                    isValid = false;
                 }
                 
-                if (!validatePhone(phone)) {
-                    showNotification('Please enter a valid 10-digit phone number', 'error');
-                    return;
+                // Validate phone
+                if (!phone) {
+                    showFieldError('regPhone', 'Phone number is required');
+                    isValid = false;
+                } else if (!validatePhone(phone)) {
+                    showFieldError('regPhone', 'Please enter a valid 10-digit phone number');
+                    isValid = false;
                 }
                 
-                if (!validatePassword(password)) {
-                    showNotification('Password must be at least 6 characters', 'error');
-                    return;
+                // Validate password
+                if (!password) {
+                    showFieldError('regPassword', 'Password is required');
+                    isValid = false;
+                } else if (!validatePassword(password)) {
+                    showFieldError('regPassword', 'Password must be at least 6 characters');
+                    isValid = false;
                 }
                 
-                if (password !== confirmPassword) {
-                    showNotification('Passwords do not match', 'error');
-                    return;
+                // Validate confirm password
+                if (!confirmPassword) {
+                    showFieldError('regConfirmPassword', 'Please confirm your password');
+                    isValid = false;
+                } else if (password !== confirmPassword) {
+                    showFieldError('regConfirmPassword', 'Passwords do not match');
+                    isValid = false;
                 }
+                
+                if (!isValid) return;
                 
                 // Check if user already exists
                 if (db.getUserByEmail(email)) {
                     showNotification('User with this email already exists', 'error');
+                    showFieldError('regEmail', 'Email already registered');
                     return;
                 }
                 
                 // Create new user
                 const user = {
-                    name: name,
-                    email: email,
-                    phone: phone,
+                    name: name.trim(),
+                    email: email.trim(),
+                    phone: phone.trim(),
                     password: password
                 };
                 
@@ -805,7 +794,7 @@
                 userBookings = [];
                 updateAuthUI();
                 closeAuthModal();
-                showNotification('Registration successful! Welcome to GreenRide', 'success');
+                showNotification('Registration successful! Welcome to Bus Reservation', 'success');
                 showSection('dashboard');
             }
             
@@ -815,22 +804,51 @@
                 const from = $('#from').val();
                 const to = $('#to').val();
                 const date = $('#date').val();
+                let isValid = true;
                 
-                // Validate inputs
-                if (!from || !to || !date) {
-                    showNotification('Please fill all search fields', 'error');
-                    return;
+                // Clear previous errors
+                $('#fromError, #toError, #dateError').hide();
+                $('#from, #to, #date').removeClass('error-border');
+                
+                // Validate from
+                if (!from) {
+                    $('#fromError').show();
+                    $('#from').addClass('error-border');
+                    isValid = false;
                 }
                 
-                if (from === to) {
-                    showNotification('Departure and destination cannot be the same', 'error');
-                    return;
+                // Validate to
+                if (!to) {
+                    $('#toError').show();
+                    $('#to').addClass('error-border');
+                    isValid = false;
                 }
                 
-                if (!validateDate(date)) {
-                    showNotification('Please select a valid date', 'error');
-                    return;
+                // Validate date
+                if (!date) {
+                    $('#dateError').show();
+                    $('#date').addClass('error-border');
+                    isValid = false;
+                } else {
+                    const selectedDate = new Date(date);
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    
+                    if (selectedDate < today) {
+                        $('#dateError').text('Please select a future date').show();
+                        $('#date').addClass('error-border');
+                        isValid = false;
+                    }
                 }
+                
+                // Check if from and to are same
+                if (from && to && from === to) {
+                    $('#toError').text('Departure and destination cannot be the same').show();
+                    $('#to').addClass('error-border');
+                    isValid = false;
+                }
+                
+                if (!isValid) return;
                 
                 // Show loading
                 $('#busResults').html(`
@@ -839,23 +857,27 @@
                     </div>
                 `);
                 
-                // Simulate API call delay
+                // Simulate API delay
                 setTimeout(() => {
-                    // Perform search
                     const filteredBuses = busData.filter(bus => 
                         bus.from === from && bus.to === to
                     );
                     
-                    // Display results
                     displaySearchResults(filteredBuses, from, to, date);
-                }, 1000);
+                }, 800);
             }
             
             function displaySearchResults(buses, from, to, date) {
-                const fromName = $('#from option:selected').text();
-                const toName = $('#to option:selected').text();
+                const fromName = locations[from];
+                const toName = locations[to];
+                const formattedDate = new Date(date).toLocaleDateString('en-IN', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
                 
-                $('#resultsCount').text(`${buses.length} bus${buses.length !== 1 ? 'es' : ''} found for ${fromName} to ${toName} on ${formatDate(date)}`);
+                $('#resultsCount').text(`${buses.length} bus${buses.length !== 1 ? 'es' : ''} found for ${fromName} to ${toName} on ${formattedDate}`);
                 
                 $('#busResults').empty();
                 
@@ -865,49 +887,20 @@
                             <i class="fas fa-search" style="font-size: 48px; margin-bottom: 15px;"></i>
                             <h3>No buses found for your search</h3>
                             <p>Try changing your departure or destination points</p>
-                            <p>Or try searching for these popular routes:</p>
-                            <div style="margin-top: 20px;">
-                                <button class="action-btn" data-from="railway-station" data-to="airport" style="margin: 5px;">
-                                    <i class="fas fa-route"></i> Railway Station to Airport
-                                </button>
-                                <button class="action-btn" data-from="bus-stand" data-to="university" style="margin: 5px;">
-                                    <i class="fas fa-route"></i> Bus Stand to University
-                                </button>
-                                <button class="action-btn" data-from="mavdi" data-to="race-course" style="margin: 5px;">
-                                    <i class="fas fa-route"></i> Mavdi to Race Course
-                                </button>
-                            </div>
                         </div>
                     `);
-                    
-                    // Attach click handlers to popular route buttons
-                    $('.action-btn[data-from]').on('click', function() {
-                        const from = $(this).data('from');
-                        const to = $(this).data('to');
-                        $('#from').val(from);
-                        $('#to').val(to);
-                        $('#searchForm').submit();
-                    });
                 } else {
-                    // Sort buses by departure time
-                    buses.sort((a, b) => {
-                        return convertTimeToMinutes(a.departure) - convertTimeToMinutes(b.departure);
-                    });
-                    
                     // Apply time filter
                     const filteredBuses = applyTimeFilter(buses, currentTimeFilter);
                     
                     filteredBuses.forEach(bus => {
-                        const bookedSeats = db.getBookedSeats(bus.id, date);
-                        const availableSeats = bus.totalSeats - bookedSeats.length;
-                        
                         const busCard = `
                             <div class="bus-card" data-bus-id="${bus.id}">
                                 <div class="bus-info">
                                     <h3 class="bus-name">
                                         ${bus.name}
                                         <span style="font-size: 14px; color: var(--text-light); margin-left: 10px;">
-                                            ${bus.timeOfDay === 'morning' ? '🌅 Morning' : bus.timeOfDay === 'afternoon' ? '☀️ Afternoon' : '🌇 Evening'} Service
+                                            ${bus.timeOfDay === 'morning' ? 'Morning' : bus.timeOfDay === 'afternoon' ? 'Afternoon' : 'Evening'} Service
                                         </span>
                                     </h3>
                                     <div class="schedule-info">
@@ -924,58 +917,39 @@
                                         <div class="duration">Journey Time: ${bus.duration}</div>
                                         <div class="timing-row">
                                             <div>
-                                                <span class="timing-label">Frequency:</span>
-                                                <span class="timing-value"> ${bus.frequency}</span>
+                                                <span class="timing-label">Bus Type:</span>
+                                                <span class="timing-value"> ${bus.type}</span>
                                             </div>
                                             <div>
-                                                <span class="timing-label">First Bus:</span>
-                                                <span class="timing-value"> ${bus.firstBus}</span>
-                                            </div>
-                                            <div>
-                                                <span class="timing-label">Last Bus:</span>
-                                                <span class="timing-value"> ${bus.lastBus}</span>
+                                                <span class="timing-label">Bus No:</span>
+                                                <span class="timing-value"> ${bus.busNumber}</span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="bus-details">
-                                        <span><i class="fas ${bus.type.includes('AC') ? 'fa-snowflake' : 'fa-bus'}"></i> ${bus.type}</span>
-                                        <span><i class="fas fa-users"></i> Seats Available: ${availableSeats}</span>
-                                        <span><i class="fas fa-map-marker-alt"></i> Stops: ${bus.stops}</span>
-                                        <span><i class="fas fa-bus"></i> Bus No: ${bus.busNumber}</span>
-                                    </div>
-                                    <div class="bus-details">
                                         ${bus.amenities.map(amenity => `<span><i class="fas fa-check"></i> ${amenity}</span>`).join('')}
                                     </div>
-                                    <button class="action-btn view-schedule-btn" style="margin-top: 10px;">
-                                        <i class="fas fa-clock"></i> View Full Schedule & Route
+                                    <button class="action-btn view-schedule" style="margin-top: 10px;">
+                                        <i class="fas fa-clock"></i> View Schedule Details
                                     </button>
-                                    <div class="route-map" style="display: none; margin-top: 15px;" id="routeMap-${bus.id}">
-                                        <h4>Route Stops with Timings:</h4>
-                                        ${bus.routeStops.map(stop => `
-                                            <div class="route-stop">
-                                                <div class="stop-dot"></div>
-                                                <div class="stop-name">${stop.name}</div>
-                                                <div class="stop-time">${stop.time}</div>
-                                            </div>
-                                        `).join('')}
-                                    </div>
-                                    <div class="schedule-info" style="display: none; margin-top: 15px;" id="schedule-${bus.id}">
-                                        <h4>Today's Schedule:</h4>
-                                        ${bus.schedule.map(slot => `
-                                            <div style="padding: 8px; border-bottom: 1px solid #eee;">
-                                                <strong>${slot.time}</strong> - ${slot.from} to ${slot.to}
-                                            </div>
-                                        `).join('')}
+                                    <div class="route-map" id="routeMap-${bus.id}">
+                                        <h4>Route Information:</h4>
+                                        <div style="padding: 10px; background-color: white; border-radius: 5px; margin-top: 10px;">
+                                            <p><strong>${fromName} to ${toName}</strong></p>
+                                            <p>Departure: ${bus.departure}</p>
+                                            <p>Arrival: ${bus.arrival}</p>
+                                            <p>Duration: ${bus.duration}</p>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="bus-fare">
                                     <div class="fare-amount">₹${bus.fare}</div>
-                                    <button class="book-btn" data-bus-id="${bus.id}" data-date="${date}">
-                                        ${availableSeats > 0 ? 'Book Now' : 'Sold Out'}
-                                    </button>
-                                    <div style="margin-top: 10px; font-size: 12px; color: var(--text-light);">
-                                        <i class="fas fa-info-circle"></i> Fare per seat
+                                    <div style="margin: 10px 0; color: var(--text-light);">
+                                        <i class="fas fa-chair"></i> ${bus.availableSeats} seats available
                                     </div>
+                                    <button class="book-btn" data-bus-id="${bus.id}" data-date="${date}">
+                                        ${bus.availableSeats > 0 ? 'Book Now' : 'Sold Out'}
+                                    </button>
                                 </div>
                             </div>
                         `;
@@ -988,31 +962,39 @@
                         const date = $(this).data('date');
                         startBookingProcess(busId, date);
                     });
+                    
+                    // Attach schedule view handlers
+                    $('.view-schedule').on('click', function() {
+                        const busCard = $(this).closest('.bus-card');
+                        const routeMap = busCard.find('.route-map');
+                        routeMap.slideToggle();
+                    });
                 }
                 
-                // Show results section
-                $('#busListSection').show();
                 showSection('busList');
-                
-                // Scroll to results
-                $('html, body').animate({
-                    scrollTop: $('#busListSection').offset().top - 100
-                }, 500);
             }
             
             function applyTimeFilter(buses, timeFilter) {
                 if (timeFilter === 'all') return buses;
                 
                 return buses.filter(bus => {
-                    const departureMinutes = convertTimeToMinutes(bus.departure);
+                    const departureTime = bus.departure;
+                    const time = departureTime.split(' ')[0];
+                    const period = departureTime.split(' ')[1];
+                    let [hours, minutes] = time.split(':').map(Number);
+                    
+                    if (period === 'PM' && hours !== 12) hours += 12;
+                    if (period === 'AM' && hours === 12) hours = 0;
+                    
+                    const departureHour = hours;
                     
                     switch(timeFilter) {
                         case 'morning':
-                            return departureMinutes >= 5 * 60 && departureMinutes < 12 * 60;
+                            return departureHour >= 5 && departureHour < 12;
                         case 'afternoon':
-                            return departureMinutes >= 12 * 60 && departureMinutes < 17 * 60;
+                            return departureHour >= 12 && departureHour < 17;
                         case 'evening':
-                            return departureMinutes >= 17 * 60 && departureMinutes < 22 * 60;
+                            return departureHour >= 17 && departureHour < 22;
                         default:
                             return true;
                     }
@@ -1024,7 +1006,7 @@
                 $('.time-filter-btn').removeClass('active');
                 $(this).addClass('active');
                 
-                // Get current search parameters and re-display results
+                // Re-filter current search results
                 const from = $('#from').val();
                 const to = $('#to').val();
                 const date = $('#date').val();
@@ -1038,20 +1020,8 @@
             }
             
             function toggleScheduleView() {
-                const busCard = $(this).closest('.bus-card');
-                const busId = busCard.data('bus-id');
-                const routeMap = $(`#routeMap-${busId}`);
-                const schedule = $(`#schedule-${busId}`);
-                
-                if (routeMap.is(':visible')) {
-                    routeMap.slideUp();
-                    schedule.slideUp();
-                    $(this).html('<i class="fas fa-clock"></i> View Full Schedule & Route');
-                } else {
-                    routeMap.slideDown();
-                    schedule.slideDown();
-                    $(this).html('<i class="fas fa-times"></i> Hide Schedule & Route');
-                }
+                const busId = $(this).closest('.bus-card').data('bus-id');
+                $(`#routeMap-${busId}`).slideToggle();
             }
             
             function startBookingProcess(busId, date) {
@@ -1075,7 +1045,7 @@
             
             function showSeatSelection(bus, date) {
                 $('#selectedBusName').text(bus.name);
-                $('#selectedBusRoute').text($('#from option:selected').text() + ' to ' + $('#to option:selected').text());
+                $('#selectedBusRoute').text(`${locations[bus.from]} to ${locations[bus.to]}`);
                 $('#selectedBusTime').text(bus.departure);
                 $('#selectedBusFare').text(bus.fare);
                 
@@ -1117,16 +1087,17 @@
                 
                 if (selectedSeats.includes(seat)) {
                     selectedSeats = selectedSeats.filter(s => s !== seat);
+                    $(this).removeClass('selected');
                 } else {
                     if (selectedSeats.length < 5) {
                         selectedSeats.push(seat);
+                        $(this).addClass('selected');
                     } else {
                         showNotification('Maximum 5 seats per booking', 'error');
                         return;
                     }
                 }
                 
-                $(this).toggleClass('selected');
                 updateSeatSelection();
             }
             
@@ -1135,7 +1106,6 @@
                 const totalAmount = selectedSeats.length * currentBooking.bus.fare;
                 $('#totalAmount').text(totalAmount);
                 
-                // Enable/disable proceed button
                 $('#proceedToPayment').prop('disabled', selectedSeats.length === 0);
             }
             
@@ -1151,8 +1121,8 @@
                     <div style="margin-bottom: 20px; padding: 15px; background-color: var(--light-mint); border-radius: 8px;">
                         <h3>Booking Summary</h3>
                         <p><strong>Bus:</strong> ${currentBooking.bus.name}</p>
-                        <p><strong>Route:</strong> ${$('#from option:selected').text()} to ${$('#to option:selected').text()}</p>
-                        <p><strong>Date:</strong> ${formatDate(currentBooking.date)}</p>
+                        <p><strong>Route:</strong> ${locations[currentBooking.bus.from]} to ${locations[currentBooking.bus.to]}</p>
+                        <p><strong>Date:</strong> ${new Date(currentBooking.date).toLocaleDateString('en-IN')}</p>
                         <p><strong>Time:</strong> ${currentBooking.bus.departure}</p>
                         <p><strong>Duration:</strong> ${currentBooking.bus.duration}</p>
                         <p><strong>Seats:</strong> ${selectedSeats.join(', ')}</p>
@@ -1178,8 +1148,8 @@
                     return;
                 }
                 
-                // Simulate payment processing
-                showNotification('Processing payment...', 'info');
+                // Show processing
+                $('#confirmPayment').html('<i class="fas fa-spinner fa-spin"></i> Processing...').prop('disabled', true);
                 
                 setTimeout(() => {
                     // Create booking
@@ -1187,9 +1157,9 @@
                         busId: currentBooking.bus.id,
                         userId: currentUser.id,
                         date: currentBooking.date,
-                        seats: selectedSeats,
+                        seats: [...selectedSeats],
                         totalAmount: selectedSeats.length * currentBooking.bus.fare,
-                        status: 'confirmed',
+                        status: 'upcoming',
                         passengerName: currentUser.name,
                         paymentMethod: selectedPaymentMethod,
                         busDetails: currentBooking.bus
@@ -1198,17 +1168,18 @@
                     const newBooking = db.addBooking(booking);
                     userBookings.push(newBooking);
                     
-                    // Close modals
+                    // Reset everything
                     $('#paymentModal').css('display', 'none');
                     selectedSeats = [];
                     selectedPaymentMethod = null;
+                    $('#confirmPayment').html('<i class="fas fa-lock"></i> Pay Now').prop('disabled', true);
                     
-                    // Show success message
-                    showNotification(`Booking confirmed! Ticket ID: ${newBooking.id}`, 'success');
+                    // Show success
+                    showNotification(`Booking confirmed! Your booking ID is ${newBooking.id}`, 'success');
                     
-                    // Update dashboard
+                    // Update dashboard and go to bookings
                     loadDashboard();
-                    showSection('dashboard');
+                    showSection('bookings');
                 }, 1500);
             }
             
@@ -1218,21 +1189,18 @@
                 $('#userName').text(currentUser.name);
                 
                 const totalBookings = userBookings.length;
-                const upcomingTrips = userBookings.filter(b => 
-                    b.status === 'confirmed' || b.status === 'upcoming'
-                ).length;
+                const upcomingTrips = userBookings.filter(b => b.status === 'upcoming').length;
                 const totalSpent = userBookings.reduce((sum, booking) => sum + booking.totalAmount, 0);
                 
                 $('#totalBookings').text(totalBookings);
                 $('#upcomingTrips').text(upcomingTrips);
                 $('#totalSpent').text(totalSpent);
                 
-                // Load recent bookings
                 loadRecentBookings();
             }
             
             function loadRecentBookings() {
-                const recentBookings = userBookings.slice(0, 3);
+                const recentBookings = userBookings.slice(-3).reverse();
                 const container = $('#recentBookings');
                 container.empty();
                 
@@ -1247,7 +1215,7 @@
                         <div class="booking-card">
                             <div>
                                 <h4>${bus?.name || 'Bus'}</h4>
-                                <p>${formatDate(booking.date)} | ${bus?.departure || ''}</p>
+                                <p>${new Date(booking.date).toLocaleDateString()} | ${bus?.departure || ''}</p>
                                 <p>Seats: ${booking.seats.join(', ')}</p>
                             </div>
                             <div>
@@ -1285,24 +1253,24 @@
                     return;
                 }
                 
-                filteredBookings.forEach(booking => {
+                filteredBookings.reverse().forEach(booking => {
                     const bus = booking.busDetails;
                     const bookingCard = `
                         <div class="booking-card">
                             <div style="flex: 1;">
                                 <h4>${bus?.name || 'Bus'}</h4>
-                                <p><strong>Ticket ID:</strong> ${booking.id}</p>
-                                <p><strong>Date:</strong> ${formatDate(booking.date)} | ${bus?.departure || ''}</p>
+                                <p><strong>Booking ID:</strong> ${booking.id}</p>
+                                <p><strong>Date:</strong> ${new Date(booking.date).toLocaleDateString()} | ${bus?.departure || ''}</p>
                                 <p><strong>Route:</strong> ${bus?.route || 'N/A'}</p>
                                 <p><strong>Seats:</strong> ${booking.seats.join(', ')}</p>
-                                <p><strong>Booked on:</strong> ${formatDate(booking.bookingDate)}</p>
+                                <p><strong>Booked on:</strong> ${new Date(booking.bookingDate).toLocaleDateString()}</p>
                             </div>
                             <div style="text-align: right;">
                                 <span class="booking-status status-${booking.status}">
                                     ${booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
                                 </span>
                                 <h3 style="margin: 10px 0;">₹${booking.totalAmount}</h3>
-                                ${(booking.status === 'confirmed' || booking.status === 'upcoming') ? 
+                                ${booking.status === 'upcoming' ? 
                                     `<button class="cancel-btn cancel-booking" data-id="${booking.id}">
                                         Cancel Booking
                                     </button>` : ''
@@ -1362,47 +1330,67 @@
                 const phone = $('#profilePhone').val();
                 const password = $('#profilePassword').val();
                 const confirmPassword = $('#profileConfirmPassword').val();
+                let isValid = true;
                 
-                if (!validateName(name)) {
-                    showNotification('Please enter a valid name', 'error');
-                    return;
+                // Clear previous errors
+                clearFormErrors();
+                
+                // Validate name
+                if (!name) {
+                    showFieldError('profileName', 'Name is required');
+                    isValid = false;
+                } else if (!validateName(name)) {
+                    showFieldError('profileName', 'Name must be at least 2 characters');
+                    isValid = false;
                 }
                 
-                if (!validatePhone(phone)) {
-                    showNotification('Please enter a valid phone number', 'error');
-                    return;
+                // Validate phone
+                if (!phone) {
+                    showFieldError('profilePhone', 'Phone number is required');
+                    isValid = false;
+                } else if (!validatePhone(phone)) {
+                    showFieldError('profilePhone', 'Please enter a valid 10-digit phone number');
+                    isValid = false;
                 }
                 
-                if (password && !validatePassword(password)) {
-                    showNotification('Password must be at least 6 characters', 'error');
-                    return;
+                // Validate password if provided
+                if (password) {
+                    if (!validatePassword(password)) {
+                        showFieldError('profilePassword', 'Password must be at least 6 characters');
+                        isValid = false;
+                    }
+                    
+                    if (password !== confirmPassword) {
+                        showFieldError('profileConfirmPassword', 'Passwords do not match');
+                        isValid = false;
+                    }
                 }
                 
-                if (password && password !== confirmPassword) {
-                    showNotification('Passwords do not match', 'error');
-                    return;
-                }
+                if (!isValid) return;
                 
                 // Update user
-                currentUser.name = name;
-                currentUser.phone = phone;
+                const updates = {
+                    name: name.trim(),
+                    phone: phone.trim()
+                };
+                
                 if (password) {
-                    currentUser.password = password;
+                    updates.password = password;
                 }
                 
-                // Update in database
-                const userIndex = db.users.findIndex(u => u.id === currentUser.id);
-                if (userIndex !== -1) {
-                    db.users[userIndex] = currentUser;
-                    db.saveUsers();
+                const updatedUser = db.updateUser(currentUser.id, updates);
+                
+                if (updatedUser) {
+                    currentUser = updatedUser;
+                    localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+                    updateAuthUI();
+                    
+                    closeProfileModal();
+                    showNotification('Profile updated successfully', 'success');
+                    loadDashboard();
+                } else {
+                    showNotification('Failed to update profile', 'error');
                 }
-                
-                localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                updateAuthUI();
-                
-                closeProfileModal();
-                showNotification('Profile updated successfully', 'success');
-                loadDashboard();
             }
             
             function handleForgotPassword(e) {
@@ -1410,15 +1398,20 @@
                 
                 const email = $('#forgotEmail').val();
                 
+                if (!email) {
+                    showFieldError('forgotEmail', 'Email is required');
+                    return;
+                }
+                
                 if (!validateEmail(email)) {
-                    showNotification('Please enter a valid email', 'error');
+                    showFieldError('forgotEmail', 'Please enter a valid email address');
                     return;
                 }
                 
                 // Check if user exists
                 const user = db.getUserByEmail(email);
                 if (!user) {
-                    showNotification('No account found with this email', 'error');
+                    showFieldError('forgotEmail', 'No account found with this email');
                     return;
                 }
                 
@@ -1430,7 +1423,8 @@
                     $('#forgotEmail').val('');
                     closeForgotModal();
                     showLoginModal();
-                }, 3000);
+                    showNotification('Password reset link sent to your email', 'success');
+                }, 2000);
             }
             
             function handleLogout() {
@@ -1452,120 +1446,5 @@
                 
                 showSection('search');
                 showNotification('Route selected. Please choose a date and search.', 'info');
-            }
-            
-            // Helper functions
-            function validateEmail(email) {
-                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                return re.test(email);
-            }
-            
-            function validatePassword(password) {
-                return password.length >= 6;
-            }
-            
-            function validatePhone(phone) {
-                const re = /^\d{10}$/;
-                return re.test(phone.replace(/\D/g, ''));
-            }
-            
-            function validateName(name) {
-                return name.trim().length >= 2;
-            }
-            
-            function validateDate(date) {
-                const selectedDate = new Date(date);
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                return selectedDate >= today;
-            }
-            
-            function clearFormErrors() {
-                $('.validation-message').hide();
-                $('.form-input').removeClass('error-border success-border');
-            }
-            
-            function formatDate(dateString) {
-                const date = new Date(dateString);
-                return date.toLocaleDateString('en-IN', {
-                    day: '2-digit',
-                    month: 'short',
-                    year: 'numeric'
-                });
-            }
-            
-            function convertTimeToMinutes(timeStr) {
-                const [time, period] = timeStr.split(' ');
-                let [hours, minutes] = time.split(':').map(Number);
-                
-                if (period === 'PM' && hours !== 12) hours += 12;
-                if (period === 'AM' && hours === 12) hours = 0;
-                
-                return hours * 60 + minutes;
-            }
-            
-            function setupRealTimeValidation() {
-                // Email validation
-                $('#loginEmail, #regEmail, #forgotEmail').on('input', function() {
-                    const email = $(this).val();
-                    if (email === '') {
-                        $(this).removeClass('error-border success-border');
-                    } else if (validateEmail(email)) {
-                        $(this).removeClass('error-border').addClass('success-border');
-                    } else {
-                        $(this).removeClass('success-border').addClass('error-border');
-                    }
-                });
-                
-                // Password validation
-                $('#loginPassword, #regPassword, #profilePassword').on('input', function() {
-                    const password = $(this).val();
-                    if (password === '') {
-                        $(this).removeClass('error-border success-border');
-                    } else if (validatePassword(password)) {
-                        $(this).removeClass('error-border').addClass('success-border');
-                    } else {
-                        $(this).removeClass('success-border').addClass('error-border');
-                    }
-                });
-                
-                // Phone validation
-                $('#regPhone, #profilePhone').on('input', function() {
-                    const phone = $(this).val();
-                    if (phone === '') {
-                        $(this).removeClass('error-border success-border');
-                    } else if (validatePhone(phone)) {
-                        $(this).removeClass('error-border').addClass('success-border');
-                    } else {
-                        $(this).removeClass('success-border').addClass('error-border');
-                    }
-                });
-                
-                // Name validation
-                $('#regName, #profileName').on('input', function() {
-                    const name = $(this).val();
-                    if (name === '') {
-                        $(this).removeClass('error-border success-border');
-                    } else if (validateName(name)) {
-                        $(this).removeClass('error-border').addClass('success-border');
-                    } else {
-                        $(this).removeClass('success-border').addClass('error-border');
-                    }
-                });
-                
-                // Confirm password validation
-                $('#regConfirmPassword, #profileConfirmPassword').on('input', function() {
-                    const confirmPassword = $(this).val();
-                    const passwordField = $(this).attr('id').includes('reg') ? $('#regPassword') : $('#profilePassword');
-                    const password = passwordField.val();
-                    
-                    if (confirmPassword === '') {
-                        $(this).removeClass('error-border success-border');
-                    } else if (password === confirmPassword) {
-                        $(this).removeClass('error-border').addClass('success-border');
-                    } else {
-                        $(this).removeClass('success-border').addClass('error-border');
-                    }
-                });
             }
         });

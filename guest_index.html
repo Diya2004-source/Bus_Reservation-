@@ -6,22 +6,22 @@
     <title>Bus Tracker</title>
      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="guest_style.css">
 </head>
 <body>
-     <!-- Header -->
+    <!-- Header -->
     <header>
         <div class="container">
             <nav class="navbar">
                 <div class="logo">
-                    
-                    Bus-Reservation 
+                    <i class="fas fa-bus"></i>
+                    Bus Reservation 
                 </div>
                 <ul class="nav-links">
                     <li><a href="#" class="nav-link active" data-section="home">Home</a></li>
                     <li><a href="#" class="nav-link" data-section="search">Search Buses</a></li>
-                    <li><a href="#" class="nav-link" data-section="dashboard" id="dashboardLink" style="display:none;"> Dashboard</a></li>
-                    <li><a href="#" class="nav-link" data-section="bookings" id="bookingsLink" style="display:none;"> My Bookings</a></li>
+                    <li><a href="#" class="nav-link" data-section="dashboard" id="dashboardLink" style="display:none;">Dashboard</a></li>
+                    <li><a href="#" class="nav-link" data-section="bookings" id="bookingsLink" style="display:none;">My Bookings</a></li>
                 </ul>
                 <div class="auth-buttons" id="authButtons">
                     <button class="login-btn" id="loginBtn"> Login</button>
@@ -40,28 +40,28 @@
     <!-- Home Section -->
     <section class="hero" id="homeSection">
         <div class="container">
-            <h1>Travel Smarter with Bus - Reservation</h1>
+            <h1>Travel Smarter with Bus Reservation</h1>
             <p>Book bus tickets online with ease. Find the best routes, compare fares, and enjoy comfortable journeys across the country.</p>
         </div>
     </section>
 
     <!-- Search Section -->
-    <section class="search-section" id="searchSection">
+    <section class="search-section" id="searchSection" style="display: none;">
         <div class="container">
-            <h2 style="margin-bottom: 20px; text-align: center;">Find Your Perfect</h2>
+            <h2 style="margin-bottom: 20px; text-align: center;">Find Your Perfect Bus</h2>
             <form class="search-form" id="searchForm">
                 <div class="form-group">
                     <label for="from">From</label>
                     <select id="from">
                         <option value="">Select Departure Point</option>
-                        <option value="railway-station">Rajkot</option>
-                        <option value="bus-stand">Surat</option>
-                        <option value="airport">Mumbai</option>
-                        <option value="mavdi">Morbi</option>
-                        <option value="kalawad">Jamnagar</option>
-                        <option value="university">Ahmedabad</option>
-                        <option value="race-course">Bangalore</option>
-                        <option value="gondal">Kolkata</option>
+                        <option value="rajkot">Rajkot</option>
+                        <option value="surat">Surat</option>
+                        <option value="mumbai">Mumbai</option>
+                        <option value="morbi">Morbi</option>
+                        <option value="jamnagar">Jamnagar</option>
+                        <option value="ahmedabad">Ahmedabad</option>
+                        <option value="bangalore">Bangalore</option>
+                        <option value="kolkata">Kolkata</option>
                     </select>
                     <div class="validation-message error" id="fromError">Please select a departure point</div>
                 </div>
@@ -69,14 +69,14 @@
                     <label for="to">To</label>
                     <select id="to">
                         <option value="">Select Destination</option>
-                        <option value="railway-station">Rajkot</option>
-                        <option value="bus-stand">Surat</option>
-                        <option value="airport">Mumbai</option>
-                        <option value="mavdi">Morbi</option>
-                        <option value="kalawad">Jamnagar</option>
-                        <option value="university">Ahmedabad</option>
-                        <option value="race-course">Bangalore</option>
-                        <option value="gondal">Kolkata</option>
+                        <option value="rajkot">Rajkot</option>
+                        <option value="surat">Surat</option>
+                        <option value="mumbai">Mumbai</option>
+                        <option value="morbi">Morbi</option>
+                        <option value="jamnagar">Jamnagar</option>
+                        <option value="ahmedabad">Ahmedabad</option>
+                        <option value="bangalore">Bangalore</option>
+                        <option value="kolkata">Kolkata</option>
                     </select>
                     <div class="validation-message error" id="toError">Please select a destination</div>
                 </div>
@@ -122,7 +122,7 @@
     </section>
 
     <!-- Dashboard Section -->
-    <section class="dashboard-section" id="dashboardSection">
+    <section class="dashboard-section" id="dashboardSection" style="display: none;">
         <div class="container">
             <div class="dashboard-header">
                 <h2 class="section-title">Dashboard</h2>
@@ -170,7 +170,7 @@
     </section>
 
     <!-- Bus List Section -->
-    <section class="bus-list" id="busListSection">
+    <section class="bus-list" id="busListSection" style="display: none;">
         <div class="container">
             <div class="search-results-header">
                 <h2 class="section-title">Available Buses</h2>
@@ -182,9 +182,9 @@
             
             <div class="time-filter" id="timeFilter">
                 <button class="time-filter-btn active" data-time="all">All Times</button>
-                <button class="time-filter-btn" data-time="morning">🌅 Morning (5AM-12PM)</button>
-                <button class="time-filter-btn" data-time="afternoon">☀️ Afternoon (12PM-5PM)</button>
-                <button class="time-filter-btn" data-time="evening">🌇 Evening (5PM-10PM)</button>
+                <button class="time-filter-btn" data-time="morning"> Morning (5AM-12PM)</button>
+                <button class="time-filter-btn" data-time="afternoon">Afternoon (12PM-5PM)</button>
+                <button class="time-filter-btn" data-time="evening">Evening (5PM-10PM)</button>
             </div>
             
             <div id="busResults">
@@ -194,7 +194,7 @@
     </section>
 
     <!-- Bookings Section -->
-    <section class="bus-list" id="bookingsSection">
+    <section class="bus-list" id="bookingsSection" style="display: none;">
         <div class="container">
             <h2 class="section-title">My Bookings</h2>
             <div class="tabs" style="margin-bottom: 20px;">
@@ -391,7 +391,7 @@
                 <div class="validation-message error" id="profileNameError"></div>
                 
                 <input type="email" class="form-input" id="profileEmail" placeholder="Email Address" readonly>
-                <div class="validation-message info" style="display:block;">Email cannot be changed</div>
+                <div class="validation-message info" style="display:block; color: var(--text-light);">Email cannot be changed</div>
                 
                 <input type="tel" class="form-input" id="profilePhone" placeholder="Phone Number">
                 <div class="validation-message error" id="profilePhoneError"></div>
@@ -414,16 +414,16 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h3>GreenRide Rajkot</h3>
-                    <p>Your trusted partner for comfortable and affordable bus travel in Rajkot city.</p>
+                    <h3>Bus Reservation System</h3>
+                    <p>Your trusted partner for comfortable and affordable bus travel across India.</p>
                 </div>
                 <div class="footer-section">
                     <h3>Popular Routes</h3>
                     <ul>
-                        <li><a href="#" class="popular-route" data-from="railway-station" data-to="airport">Railway Station to Airport</a></li>
-                        <li><a href="#" class="popular-route" data-from="bus-stand" data-to="university">Bus Stand to University</a></li>
-                        <li><a href="#" class="popular-route" data-from="mavdi" data-to="race-course">Mavdi to Race Course</a></li>
-                        <li><a href="#" class="popular-route" data-from="kalawad" data-to="gondal">Kalawad to Gondal Road</a></li>
+                        <li><a href="#" class="popular-route" data-from="rajkot" data-to="ahmedabad">Rajkot to Ahmedabad</a></li>
+                        <li><a href="#" class="popular-route" data-from="surat" data-to="mumbai">Surat to Mumbai</a></li>
+                        <li><a href="#" class="popular-route" data-from="bangalore" data-to="mumbai">Bangalore to Mumbai</a></li>
+                        <li><a href="#" class="popular-route" data-from="mumbai" data-to="pune">Mumbai to Pune</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
@@ -438,18 +438,19 @@
                 <div class="footer-section">
                     <h3>Contact Info</h3>
                     <ul>
-                        <li>Email: support@greenriderajkot.com</li>
+                        <li>Email: support@busreservation.com</li>
                         <li>Phone: +91 98765 43210</li>
-                        <li>Address: 123 Bus Terminal, Rajkot, Gujarat</li>
+                        <li>Address: 123 Bus Terminal, Mumbai, India</li>
                     </ul>
                 </div>
             </div>
             <div class="copyright">
-                &copy; 2023 GreenRide Rajkot. All rights reserved.
+                &copy; 2024 Bus Reservation System. All rights reserved.
             </div>
         </div>
     </footer>
-    <script src="script.js"></script>
+
+    <script src="guest_script.js"></script>
 
 </body>
 </html>

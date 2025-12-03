@@ -1,4 +1,4 @@
-:root {
+ :root {
             --mint-green: #98FF98;
             --light-mint: #E8FFE8;
             --dark-mint: #7AE57A;
@@ -21,6 +21,9 @@
         body {
             background-color: var(--white);
             color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         
         .container {
@@ -120,6 +123,7 @@
             background-color: transparent;
             color: var(--white);
             border: 1px solid var(--white);
+            padding: 8px 15px;
         }
         
         .user-welcome {
@@ -435,16 +439,15 @@
         .form-input {
             width: 100%;
             padding: 12px;
-            margin-bottom: 15px;
+            margin-bottom: 5px;
             border: 1px solid #ddd;
             border-radius: 5px;
             font-size: 16px;
         }
         
-        .error {
+        .validation-message {
             color: var(--error);
             font-size: 14px;
-            margin-top: -10px;
             margin-bottom: 10px;
             display: none;
         }
@@ -481,7 +484,7 @@
         footer {
             background-color: var(--light-mint);
             padding: 40px 0;
-            margin-top: 60px;
+            margin-top: auto;
         }
         
         .footer-content {
@@ -536,13 +539,6 @@
             border: 1px solid var(--success) !important;
         }
         
-        .validation-message {
-            font-size: 14px;
-            margin-top: -10px;
-            margin-bottom: 10px;
-            display: none;
-        }
-        
         .validation-message.error {
             color: var(--error);
         }
@@ -560,40 +556,6 @@
             color: var(--success);
             display: none;
         }
-        
-        /* Rajkot Specific Styles */
-        .city-badge {
-            background-color: var(--dark-mint);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 14px;
-            margin-left: 10px;
-        }
-        
-        /* Search Results Styles */
-        .search-results-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        
-        .results-count {
-            color: var(--text-light);
-        }
-        
-        .no-results {
-            text-align: center;
-            padding: 40px;
-            background-color: var(--light-mint);
-            border-radius: 8px;
-            color: var(--text-light);
-        }
-        
-        /* New Dynamic Features CSS */
         
         /* Dashboard Styles */
         .dashboard-section {
@@ -955,6 +917,7 @@
             padding: 15px;
             background-color: var(--light-mint);
             border-radius: 8px;
+            display: none;
         }
         
         .route-stop {
@@ -981,15 +944,6 @@
         .stop-time {
             color: var(--text-light);
             font-size: 14px;
-        }
-        
-        /* Popular Routes */
-        .popular-route {
-            cursor: pointer;
-        }
-        
-        .popular-route:hover {
-            text-decoration: underline !important;
         }
         
         /* Time Filter */
@@ -1114,5 +1068,9 @@
             .seat {
                 width: 40px;
                 height: 40px;
+            }
+            
+            .time-filter {
+                flex-direction: column;
             }
         }
