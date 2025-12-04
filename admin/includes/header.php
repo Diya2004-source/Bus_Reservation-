@@ -176,30 +176,12 @@
                class="nav-link <?php echo $current==='buses.php'?'active':''; ?>">
                 <i class="fa-solid fa-bus-simple"></i> <span>Buses</span>
             </a>
-            <a href="routes.php"
-               class="nav-link <?php echo $current==='routes.php'?'active':''; ?>">
-                <i class="fa-solid fa-route"></i> <span>Routes</span>
-            </a>
-            <a href="trips.php"
-               class="nav-link <?php echo $current==='trips.php'?'active':''; ?>">
-                <i class="fa-regular fa-calendar-check"></i> <span>Trips</span>
-            </a>
+            
             <a href="bookings.php"
                class="nav-link <?php echo $current==='bookings.php'?'active':''; ?>">
                 <i class="fa-solid fa-ticket"></i> <span>Bookings</span>
             </a>
-            <a href="users.php"
-               class="nav-link <?php echo $current==='users.php'?'active':''; ?>">
-                <i class="fa-solid fa-user-group"></i> <span>Users</span>
-            </a>
-            <a href="offers.php"
-               class="nav-link <?php echo $current==='offers.php'?'active':''; ?>">
-                <i class="fa-solid fa-tags"></i> <span>Offers</span>
-            </a>
-            <a href="payments.php"
-               class="nav-link <?php echo $current==='payments.php'?'active':''; ?>">
-                <i class="fa-solid fa-credit-card"></i> <span>Payments</span>
-            </a>
+            
             <!-- extra menu items if you later create pages -->
             <!--
             <a href="tracking.php" class="nav-link"><i class="fa-solid fa-location-dot"></i> <span>Tracking</span></a>
