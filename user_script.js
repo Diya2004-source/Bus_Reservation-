@@ -2,16 +2,24 @@
 function searchBus() {
     const from = $("#from").val().trim();
     const to = $("#to").val().trim();
+    const date = $("#travelDate").val();
 
-    if (!from || !to) {
-        alert("Please enter both From and To cities.");
+    if (!from || !to || !date) {
+        alert("Please enter From, To, and Travel Date.");
+        return;
+    }
+
+    // Prevent past dates
+    const today = new Date().toISOString().split('T')[0];
+    if(date < today){
+        alert("Please select a valid travel date.");
         return;
     }
 
     $.ajax({
         url: "api/search_bus.php",
         type: "GET",
-        data: { from, to },
+        data: { from, to, date },
         success: function (res) {
             const buses = JSON.parse(res);
             let html = "";
@@ -36,7 +44,7 @@ function searchBus() {
             }
 
             $("#busList").html(html);
-            $("#seatArea").html("");  // Clear previous seat layout
+            $("#seatArea").html("");
         },
         error: function () {
             alert("Error fetching buses. Try again.");
@@ -44,7 +52,7 @@ function searchBus() {
     });
 }
 
-// OPEN SEATS ON BOOK CLICK
+// OPEN SEATS
 $(document).on("click", ".book-btn", function () {
     const busId = $(this).data("id");
     const route = $(this).data("route");
@@ -54,27 +62,25 @@ $(document).on("click", ".book-btn", function () {
     localStorage.setItem("booking_route", route);
     localStorage.setItem("booking_fare", fare);
 
-    // Fetch booked seats
     $.ajax({
         url: "api/get_seats.php",
         type: "GET",
         data: { bus_id: busId },
-        success: function(res) {
-            const bookedSeats = JSON.parse(res).map(s => s.seat); // array of booked seat numbers
+        success: function (res) {
+            const bookedSeats = JSON.parse(res).map(s => s.seat);
             let html = "<h3 class='text-center mt-3'>Select Your Seat</h3><div class='mt-3 text-center'>";
 
             for (let i = 1; i <= 30; i++) {
                 const disabled = bookedSeats.includes(i.toString()) ? "disabled" : "";
-                const btnClass = bookedSeats.includes(i.toString()) ? "btn-secondary" : "btn-outline-success";
-                html += `<button class="seat-btn btn ${btnClass} m-2" data-seat="${i}" ${disabled}>Seat ${i}</button>`;
+                const colorClass = bookedSeats.includes(i.toString()) ? "btn-secondary" : "btn-outline-dark";
+                html += `<button class="seat-btn btn ${colorClass} m-2" data-seat="${i}" ${disabled}>Seat ${i}</button>`;
             }
 
             html += "</div><div id='selectedSeat' class='mt-3 text-center'></div>";
-
             $("#seatArea").html(html);
-            $("#busList").html(""); 
+            $("#busList").html("");
         },
-        error: function() {
+        error: function () {
             alert("Error fetching seats. Please try again.");
         }
     });
@@ -96,9 +102,7 @@ $(document).on("click", ".seat-btn", function () {
     `);
 });
 
-
-
-// PROCEED TO PAYMENT
+// GO TO PAYMENT PAGE
 $(document).on("click", "#payNow", function () {
     window.location.href = "user_payment.html";
 });
@@ -107,33 +111,62 @@ $(document).on("click", "#payNow", function () {
 $(document).ready(function () {
     if (window.location.pathname.includes("user_payment.html")) {
         const fare = localStorage.getItem("booking_fare");
-        const payBtn = $("#payBtn");
+        $("#payBtn").text(`Pay ₹${fare}`);
+        $("#paymentSection").hide();
+        $("#paymentDoneBtn").hide();
 
-        if (payBtn.length) {
-            payBtn.text(`Pay ₹${fare}`);
+        $("#payBtn").click(function () {
+            const name = $("#cardName").val().trim();
+            if (!name) { alert("Enter your name!"); return; }
 
-            payBtn.on("click", function () {
-                const name = $("#cardName").val().trim();
-                const number = $("#cardNumber").val().trim();
+            const bookingData = {
+                busId: localStorage.getItem("booking_busId"),
+                route: localStorage.getItem("booking_route"),
+                seat: localStorage.getItem("booking_seat"),
+                fare: localStorage.getItem("booking_fare")
+            };
 
-                if (!name || !number) {
-                    alert("Please enter card name & number!");
-                    return;
-                }
-
-                if (!/^\d{12,19}$/.test(number)) {
-                    alert("Invalid card number (12-19 digits)");
-                    return;
-                }
-
-                paymentDone();
+            // SHOW QR CODE
+            $("#paymentSection").show();
+            $("#qrCode").html(""); // clear previous QR
+            new QRCode(document.getElementById("qrCode"), {
+                text: JSON.stringify(bookingData),
+                width: 260,
+                height: 260,
+                colorDark: "#000000",
+                colorLight: "#ffffff"
             });
-        }
+            $("#paymentDoneBtn").show();
+            $("#payBtn").prop("disabled", true).text("Scan QR or Pay Online");
+
+        
+            if("YOUR_RAZORPAY_KEY" !== "" && !isNaN(parseFloat(bookingData.fare))){
+                var options = {
+                    "key": "YOUR_RAZORPAY_KEY", // replace with your actual key
+                    "amount": parseFloat(bookingData.fare) * 100,
+                    "currency": "INR",
+                    "name": "Bus Reservation",
+                    "description": `Booking for Seat ${bookingData.seat} - ${bookingData.route}`,
+                    "handler": function (response){
+                        alert("Payment successful! Payment ID: " + response.razorpay_payment_id);
+                        saveBooking();
+                    },
+                    "prefill": { "name": name },
+                    "theme": { "color": "#3399cc" }
+                };
+                var rzp1 = new Razorpay(options);
+                rzp1.open();
+            } else {
+                console.log("Razorpay not initialized. Using QR payment only.");
+            }
+        });
     }
 });
 
+// =======================
 // SAVE BOOKING
-function paymentDone() {
+// =======================
+function saveBooking() {
     $.ajax({
         url: "api/save_booking.php",
         type: "POST",
@@ -148,9 +181,13 @@ function paymentDone() {
             localStorage.clear();
             window.location.href = "user_index.html";
         },
-        error: function (xhr) {
+        error: function(xhr){
             console.error(xhr.responseText);
             alert("Error processing booking.");
         }
     });
 }
+
+$(document).on("click", "#paymentDoneBtn", function () {
+    saveBooking();
+});

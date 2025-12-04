@@ -8,9 +8,6 @@
 <link rel="stylesheet" href="user_style.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="user_script.js?v=1"></script>
-
 <style>
   html, body {
     height: 100%;
@@ -49,6 +46,10 @@
   .seat-btn {
     width: 60px;
   }
+
+  @media(max-width:768px){
+    .seat-btn { width: 45px; font-size:12px; }
+  }
 </style>
 </head>
 
@@ -62,7 +63,7 @@
     </button>
     <div class="collapse navbar-collapse" id="nav">
       <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="nav-link" href="user_index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link active" href="user_index.html">Home</a></li>
         <li class="nav-item"><a class="nav-link" href="user_booking.html">Booking</a></li>
         <li class="nav-item"><a class="nav-link" href="user_track.html">Track Bus</a></li>
         <li class="nav-item"><a class="nav-link" href="user_payment.html">Payment</a></li>
@@ -76,23 +77,22 @@
   <div class="card card-custom p-4 shadow">
     <h3 class="text-center mb-3">Search Your Bus</h3>
     <div class="row g-3">
-  <div class="col-md-4">
-    <input type="text" class="form-control" id="from" placeholder="From">
-  </div>
+      <div class="col-md-4">
+        <input type="text" class="form-control" id="from" placeholder="From" autocomplete="off">
+      </div>
 
-  <div class="col-md-4">
-    <input type="text" class="form-control" id="to" placeholder="To">
-  </div>
+      <div class="col-md-4">
+        <input type="text" class="form-control" id="to" placeholder="To" autocomplete="off">
+      </div>
 
-  <div class="col-md-4">
-    <input type="date" class="form-control" id="travelDate" placeholder="Travel Date">
-  </div>
+      <div class="col-md-4">
+        <input type="date" class="form-control" id="travelDate" placeholder="Travel Date">
+      </div>
 
-  <div class="col-md-12 d-grid mt-3">
-    <button class="btn btn-success" onclick="searchBus()">Search</button>
-  </div>
-</div>
-
+      <div class="col-md-12 d-grid mt-3">
+        <button class="btn btn-success" onclick="searchBus()">Search</button>
+      </div>
+    </div>
   </div>
 
   <!-- Bus List -->
@@ -106,6 +106,8 @@
   © Bus Reservation | MCA Project
 </footer>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="user_script.js?v=1"></script>
 </body>
 </html>
