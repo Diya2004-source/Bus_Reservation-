@@ -6,26 +6,24 @@
     <title>Bus Tracker</title>
      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="guest_style.css">
 </head>
-<body>
-     <!-- Header -->
+<body> <!-- Header -->
     <header>
         <div class="container">
             <nav class="navbar">
                 <div class="logo">
-                    
-                    Bus-Reservation 
+                    <i class="fas fa-bus"></i>
+                    Bus Reservation System
                 </div>
                 <ul class="nav-links">
                     <li><a href="#" class="nav-link active" data-section="home">Home</a></li>
                     <li><a href="#" class="nav-link" data-section="search">Search Buses</a></li>
-                    <li><a href="#" class="nav-link" data-section="dashboard" id="dashboardLink" style="display:none;"> Dashboard</a></li>
-                    <li><a href="#" class="nav-link" data-section="bookings" id="bookingsLink" style="display:none;"> My Bookings</a></li>
+                    <li><a href="#" class="nav-link" data-section="contact">Contact Us</a></li>
                 </ul>
                 <div class="auth-buttons" id="authButtons">
-                    <button class="login-btn" id="loginBtn"> Login</button>
-                    <button class="register-btn" id="registerBtn"> Register</button>
+                    <button class="login-btn" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Login</button>
+                    <button class="register-btn" id="registerBtn"><i class="fas fa-user-plus"></i> Register</button>
                 </div>
             </nav>
         </div>
@@ -40,48 +38,51 @@
     <!-- Home Section -->
     <section class="hero" id="homeSection">
         <div class="container">
-            <h1>Travel Smarter with Bus - Reservation</h1>
-            <p>Book bus tickets online with ease. Find the best routes, compare fares, and enjoy comfortable journeys across the country.</p>
+            <h1>Welcome to Bus Reservation System</h1>
+            <p>Find and book bus tickets for your next journey. Search across thousands of routes with real-time availability.</p>
+            <button class="search-btn" id="getStartedBtn">
+                <i class="fas fa-search"></i> Search Buses Now
+            </button>
         </div>
     </section>
 
     <!-- Search Section -->
-    <section class="search-section" id="searchSection">
+    <section class="search-section" id="searchSection" style="display: none;">
         <div class="container">
-            <h2 style="margin-bottom: 20px; text-align: center;">Find Your Perfect</h2>
+            <h2>Find Your Perfect Bus</h2>
             <form class="search-form" id="searchForm">
                 <div class="form-group">
-                    <label for="from">From</label>
+                    <label for="from">From City</label>
                     <select id="from">
-                        <option value="">Select Departure Point</option>
-                        <option value="railway-station">Rajkot</option>
-                        <option value="bus-stand">Surat</option>
-                        <option value="airport">Mumbai</option>
-                        <option value="mavdi">Morbi</option>
-                        <option value="kalawad">Jamnagar</option>
-                        <option value="university">Ahmedabad</option>
-                        <option value="race-course">Bangalore</option>
-                        <option value="gondal">Kolkata</option>
+                        <option value="">Select Departure City</option>
+                        <option value="mumbai">Mumbai</option>
+                        <option value="delhi">Delhi</option>
+                        <option value="bangalore">Bangalore</option>
+                        <option value="chennai">Chennai</option>
+                        <option value="kolkata">Kolkata</option>
+                        <option value="hyderabad">Hyderabad</option>
+                        <option value="pune">Pune</option>
+                        <option value="ahmedabad">Ahmedabad</option>
                     </select>
-                    <div class="validation-message error" id="fromError">Please select a departure point</div>
+                    <div class="validation-message error" id="fromError">Please select a departure city</div>
                 </div>
                 <div class="form-group">
-                    <label for="to">To</label>
+                    <label for="to">To City</label>
                     <select id="to">
-                        <option value="">Select Destination</option>
-                        <option value="railway-station">Rajkot</option>
-                        <option value="bus-stand">Surat</option>
-                        <option value="airport">Mumbai</option>
-                        <option value="mavdi">Morbi</option>
-                        <option value="kalawad">Jamnagar</option>
-                        <option value="university">Ahmedabad</option>
-                        <option value="race-course">Bangalore</option>
-                        <option value="gondal">Kolkata</option>
+                        <option value="">Select Destination City</option>
+                        <option value="mumbai">Mumbai</option>
+                        <option value="delhi">Delhi</option>
+                        <option value="bangalore">Bangalore</option>
+                        <option value="chennai">Chennai</option>
+                        <option value="kolkata">Kolkata</option>
+                        <option value="hyderabad">Hyderabad</option>
+                        <option value="pune">Pune</option>
+                        <option value="ahmedabad">Ahmedabad</option>
                     </select>
-                    <div class="validation-message error" id="toError">Please select a destination</div>
+                    <div class="validation-message error" id="toError">Please select a destination city</div>
                 </div>
                 <div class="form-group">
-                    <label for="date">Date</label>
+                    <label for="date">Travel Date</label>
                     <input type="date" id="date">
                     <div class="validation-message error" id="dateError">Please select a valid date</div>
                 </div>
@@ -98,79 +99,31 @@
             <h2 class="section-title">Why Choose Us?</h2>
             <div class="features-grid">
                 <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-bus"></i></div>
-                    <h3>Wide Bus Network</h3>
-                    <p>Access to all bus routes across India.</p>
+                    <div class="feature-icon"><i class="fas fa-route"></i></div>
+                    <h3>Wide Network</h3>
+                    <p>Connect to thousands of bus routes across India</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-rupee-sign"></i></div>
-                    <h3>Affordable Prices</h3>
-                    <p>Get the lowest fares with our special student and senior citizen discounts.</p>
+                    <div class="feature-icon"><i class="fas fa-tag"></i></div>
+                    <h3>Best Prices</h3>
+                    <p>Guaranteed lowest fares with no hidden charges</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
-                    <h3>Safe & Secure</h3>
-                    <p>Your payments and personal information are protected with encryption.</p>
+                    <h3>Secure Booking</h3>
+                    <p>Your information and transactions are protected</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-clock"></i></div>
-                    <h3>On-time Service</h3>
-                    <p>Punctual departures across all routes.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Dashboard Section -->
-    <section class="dashboard-section" id="dashboardSection">
-        <div class="container">
-            <div class="dashboard-header">
-                <h2 class="section-title">Dashboard</h2>
-                <div class="welcome-message" id="welcomeMessage">
-                    Welcome back, <span id="userName"></span>!
-                </div>
-            </div>
-            
-            <div class="dashboard-grid">
-                <div class="dashboard-card stats-card">
-                    <div class="stats-number" id="totalBookings">0</div>
-                    <div class="stats-label">Total Bookings</div>
-                </div>
-                <div class="dashboard-card stats-card">
-                    <div class="stats-number" id="upcomingTrips">0</div>
-                    <div class="stats-label">Upcoming Trips</div>
-                </div>
-                <div class="dashboard-card stats-card">
-                    <div class="stats-number">₹<span id="totalSpent">0</span></div>
-                    <div class="stats-label">Total Spent</div>
-                </div>
-                <div class="dashboard-card">
-                    <h3 style="margin-bottom: 15px;">Quick Actions</h3>
-                    <div class="quick-actions">
-                        <button class="action-btn" id="quickSearch">
-                            <i class="fas fa-search"></i> Search Buses
-                        </button>
-                        <button class="action-btn" id="viewBookings">
-                            <i class="fas fa-ticket-alt"></i> View Bookings
-                        </button>
-                        <button class="action-btn" id="editProfile">
-                            <i class="fas fa-user-edit"></i> Edit Profile
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="booking-history">
-                <h3 style="margin-bottom: 20px;">Recent Bookings</h3>
-                <div id="recentBookings">
-                    <!-- Recent bookings will be loaded here -->
+                    <div class="feature-icon"><i class="fas fa-headset"></i></div>
+                    <h3>24/7 Support</h3>
+                    <p>Round-the-clock customer support</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Bus List Section -->
-    <section class="bus-list" id="busListSection">
+    <section class="bus-list" id="busListSection" style="display: none;">
         <div class="container">
             <div class="search-results-header">
                 <h2 class="section-title">Available Buses</h2>
@@ -182,9 +135,9 @@
             
             <div class="time-filter" id="timeFilter">
                 <button class="time-filter-btn active" data-time="all">All Times</button>
-                <button class="time-filter-btn" data-time="morning">🌅 Morning (5AM-12PM)</button>
-                <button class="time-filter-btn" data-time="afternoon">☀️ Afternoon (12PM-5PM)</button>
-                <button class="time-filter-btn" data-time="evening">🌇 Evening (5PM-10PM)</button>
+                <button class="time-filter-btn" data-time="morning">Morning (5AM-12PM)</button>
+                <button class="time-filter-btn" data-time="afternoon">Afternoon (12PM-5PM)</button>
+                <button class="time-filter-btn" data-time="evening">Evening (5PM-10PM)</button>
             </div>
             
             <div id="busResults">
@@ -193,18 +146,35 @@
         </div>
     </section>
 
-    <!-- Bookings Section -->
-    <section class="bus-list" id="bookingsSection">
+    <!-- Contact Section -->
+    <section class="features" id="contactSection" style="display: none;">
         <div class="container">
-            <h2 class="section-title">My Bookings</h2>
-            <div class="tabs" style="margin-bottom: 20px;">
-                <button class="tab active" data-filter="all">All Bookings</button>
-                <button class="tab" data-filter="upcoming">Upcoming</button>
-                <button class="tab" data-filter="completed">Completed</button>
-                <button class="tab" data-filter="cancelled">Cancelled</button>
-            </div>
-            <div id="userBookings">
-                <!-- User bookings will be loaded here -->
+            <h2 class="section-title">Contact Us</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-phone"></i></div>
+                    <h3>Phone Support</h3>
+                    <p>+91 98765 43210</p>
+                    <p>Mon-Sun: 6:00 AM - 11:00 PM</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-envelope"></i></div>
+                    <h3>Email Support</h3>
+                    <p>support@busreservation.com</p>
+                    <p>Response within 2 hours</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-map-marker-alt"></i></div>
+                    <h3>Office Address</h3>
+                    <p>123 Bus Terminal Road</p>
+                    <p>Mumbai, Maharashtra - 400001</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-clock"></i></div>
+                    <h3>Business Hours</h3>
+                    <p>Monday - Sunday</p>
+                    <p>6:00 AM - 11:00 PM</p>
+                </div>
             </div>
         </div>
     </section>
@@ -229,7 +199,7 @@
                     <div class="validation-message error" id="loginPasswordError">Password must be at least 6 characters</div>
                     
                     <button type="submit" class="submit-btn">
-                        <i class="fas fa-sign-in-alt"></i> Login
+                        <i class="fas fa-sign-in-alt"></i><a href="user_index.html">Login</a>
                     </button>
                 </form>
                 <div class="auth-links">
@@ -290,166 +260,50 @@
         </div>
     </div>
 
-    <!-- Seat Selection Modal -->
-    <div class="seat-selection" id="seatSelectionModal">
-        <div class="seat-container">
-            <div class="modal-header">
-                <h2 class="modal-title">Select Your Seats</h2>
-                <button class="close-btn" id="closeSeatModal">&times;</button>
-            </div>
-            
-            <div class="bus-info" style="margin: 20px 0; padding: 15px; background-color: var(--light-mint); border-radius: 8px;">
-                <h3 id="selectedBusName"></h3>
-                <p id="selectedBusRoute"></p>
-                <p>Departure: <span id="selectedBusTime"></span> | Fare: ₹<span id="selectedBusFare"></span> per seat</p>
-            </div>
-            
-            <div class="seat-layout" id="seatLayout">
-                <!-- Seats will be generated dynamically -->
-            </div>
-            
-            <div class="seat-info">
-                <div class="seat-legend">
-                    <div class="legend-item">
-                        <div class="legend-color" style="background-color: white; border: 2px solid var(--dark-mint);"></div>
-                        <span>Available</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color" style="background-color: var(--dark-mint);"></div>
-                        <span>Selected</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color" style="background-color: var(--text-light);"></div>
-                        <span>Booked</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="seat-total">
-                Seats Selected: <span id="selectedSeatsCount">0</span> | 
-                Total Amount: ₹<span id="totalAmount">0</span>
-            </div>
-            
-            <button class="submit-btn" id="proceedToPayment">
-                <i class="fas fa-credit-card"></i> Proceed to Payment
-            </button>
-        </div>
-    </div>
-
-    <!-- Payment Modal -->
-    <div class="modal" id="paymentModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Complete Your Booking</h2>
-                <button class="close-btn" id="closePaymentModal">&times;</button>
-            </div>
-            
-            <div id="paymentSummary">
-                <!-- Payment summary will be loaded here -->
-            </div>
-            
-            <div class="payment-options">
-                <div class="payment-option" data-method="upi">
-                    <div class="payment-icon"><i class="fas fa-mobile-alt"></i></div>
-                    <div>
-                        <h4>UPI Payment</h4>
-                        <p>Pay using UPI apps</p>
-                    </div>
-                </div>
-                <div class="payment-option" data-method="card">
-                    <div class="payment-icon"><i class="fas fa-credit-card"></i></div>
-                    <div>
-                        <h4>Credit/Debit Card</h4>
-                        <p>Pay using your card</p>
-                    </div>
-                </div>
-                <div class="payment-option" data-method="netbanking">
-                    <div class="payment-icon"><i class="fas fa-university"></i></div>
-                    <div>
-                        <h4>Net Banking</h4>
-                        <p>Pay using net banking</p>
-                    </div>
-                </div>
-            </div>
-            
-            <button class="submit-btn" id="confirmPayment" disabled>
-                <i class="fas fa-lock"></i> Pay Now
-            </button>
-        </div>
-    </div>
-
-    <!-- Profile Edit Modal -->
-    <div class="modal" id="profileModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Edit Profile</h2>
-                <button class="close-btn" id="closeProfileModal">&times;</button>
-            </div>
-            
-            <form id="profileForm">
-                <input type="text" class="form-input" id="profileName" placeholder="Full Name">
-                <div class="validation-message error" id="profileNameError"></div>
-                
-                <input type="email" class="form-input" id="profileEmail" placeholder="Email Address" readonly>
-                <div class="validation-message info" style="display:block;">Email cannot be changed</div>
-                
-                <input type="tel" class="form-input" id="profilePhone" placeholder="Phone Number">
-                <div class="validation-message error" id="profilePhoneError"></div>
-                
-                <input type="password" class="form-input" id="profilePassword" placeholder="New Password (leave blank to keep current)">
-                <div class="validation-message error" id="profilePasswordError"></div>
-                
-                <input type="password" class="form-input" id="profileConfirmPassword" placeholder="Confirm New Password">
-                <div class="validation-message error" id="profileConfirmPasswordError"></div>
-                
-                <button type="submit" class="submit-btn">
-                    <i class="fas fa-save"></i> Save Changes
-                </button>
-            </form>
-        </div>
-    </div>
-
     <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h3>GreenRide Rajkot</h3>
-                    <p>Your trusted partner for comfortable and affordable bus travel in Rajkot city.</p>
+                    <h3>Bus Reservation</h3>
+                    <p>Your trusted partner for comfortable and affordable bus travel across India.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#" data-section="home">Home</a></li>
+                        <li><a href="#" data-section="search">Search Buses</a></li>
+                        <li><a href="#" data-section="contact">Contact Us</a></li>
+                        <li><a href="#">Terms & Conditions</a></li>
+                    </ul>
                 </div>
                 <div class="footer-section">
                     <h3>Popular Routes</h3>
                     <ul>
-                        <li><a href="#" class="popular-route" data-from="railway-station" data-to="airport">Railway Station to Airport</a></li>
-                        <li><a href="#" class="popular-route" data-from="bus-stand" data-to="university">Bus Stand to University</a></li>
-                        <li><a href="#" class="popular-route" data-from="mavdi" data-to="race-course">Mavdi to Race Course</a></li>
-                        <li><a href="#" class="popular-route" data-from="kalawad" data-to="gondal">Kalawad to Gondal Road</a></li>
+                        <li><a href="#" class="popular-route" data-from="mumbai" data-to="pune">Mumbai to Pune</a></li>
+                        <li><a href="#" class="popular-route" data-from="delhi" data-to="jaipur">Delhi to Jaipur</a></li>
+                        <li><a href="#" class="popular-route" data-from="bangalore" data-to="chennai">Bangalore to Chennai</a></li>
+                        <li><a href="#" class="popular-route" data-from="kolkata" data-to="durgapur">Kolkata to Durgapur</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
-                    <h3>Support</h3>
+                    <h3>Follow Us</h3>
                     <ul>
-                        <li><a href="#">Help Center</a></li>
-                        <li><a href="#">Contact Us</a></li>
-                        <li><a href="#">Cancellation Policy</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3>Contact Info</h3>
-                    <ul>
-                        <li>Email: support@greenriderajkot.com</li>
-                        <li>Phone: +91 98765 43210</li>
-                        <li>Address: 123 Bus Terminal, Rajkot, Gujarat</li>
+                        <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
+                        <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+                        <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+                        <li><a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
                     </ul>
                 </div>
             </div>
             <div class="copyright">
-                &copy; 2023 GreenRide Rajkot. All rights reserved.
+                &copy; 2024 Bus Reservation System. All rights reserved.
             </div>
         </div>
     </footer>
-    <script src="script.js"></script>
+
+
+    <script src="guest_script.js"></script>
 
 </body>
 </html>
