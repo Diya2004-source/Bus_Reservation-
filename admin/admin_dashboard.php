@@ -61,7 +61,7 @@ body {
 <body>
 
 <div class="sidebar">
-    <h3 class="text-center mb-4">🚌 Admin Panel</h3>
+    <h3 class="text-center mb-4"> Admin Panel</h3>
     <a href="admin_dashboard.php"><i class="bi bi-speedometer2"></i> Dashboard</a>
     <a href="add_bus.php"><i class="bi bi-plus-circle"></i> Add Bus</a>
     <a href="view_buses.php"><i class="bi bi-bus-front"></i> Manage Buses</a>
@@ -70,7 +70,7 @@ body {
 </div>
 
 <div class="content">
-    <h2>Welcome, Admin 👋</h2>
+    <h2>Welcome, Admin </h2>
     <hr>
 
     <div class="row mt-4">
