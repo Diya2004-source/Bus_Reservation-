@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Select Seats</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    .seat {
+        width: 50px;
+        height: 50px;
+        margin: 5px;
+        border-radius: 5px;
+        background-color: #28a745;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        user-select: none;
+    }
+    .seat.selected { background-color: #ffc107; }
+    .seat.occupied { background-color: #dc3545; cursor: not-allowed; }
+    .seat-row {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+    .aisle {
+        width: 30px; /* space for aisle */
+    }
+</style>
+</head>
+<body>
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Select Your Seats</h2>
+    <div id="seat-grid" class="d-flex flex-column align-items-center">Loading seats...</div>
+    <div class="text-center mt-4">
+        <button id="book-btn" class="btn btn-primary">Proceed to Payment</button>
+    </div>
+</div>
+
+<script>
+// Get bus_id and date from URL
+const urlParams = new URLSearchParams(window.location.search);
+const busId = urlParams.get('bus_id');
+const travelDate = urlParams.get('date');
+const seatGrid = document.getElementById('seat-grid');
+
+if(!busId || !travelDate){
+    alert("Error: Bus ID or date missing! Please select your bus first.");
+    window.location.href = 'index.html';
+}
+
+// Fetch occupied seats from server
+fetch(`api/server_seat.php?bus_id=${busId}&date=${travelDate}`)
+.then(res => res.json())
+.then(data => {
+    const occupiedSeats = data.map(seat => parseInt(seat.seat_no));
+    renderSeats(occupiedSeats);
+})
+.catch(err => {
+    console.error(err);
+    alert("Failed to load seats from server. Showing default grid.");
+    renderSeats([]);
+});
+
+// Function to render seats grid
+function renderSeats(occupiedSeats){
+    seatGrid.innerHTML = '';
+    const rows = 5;       // number of rows
+    const cols = 4;       // seats per row
+    let seatNumber = 1;
+
+    for(let i=0;i<rows;i++){
+        const rowDiv = document.createElement('div');
+        rowDiv.className = 'seat-row';
+
+        for(let j=0;j<cols;j++){
+            // Insert aisle space after 2 seats (simulate bus aisle)
+            if(j === 2){
+                const aisle = document.createElement('div');
+                aisle.className = 'aisle';
+                rowDiv.appendChild(aisle);
+            }
+
+            const seat = document.createElement('div');
+            seat.className = 'seat';
+            seat.textContent = seatNumber;
+
+            if(occupiedSeats.includes(seatNumber)){
+                seat.classList.add('occupied');
+            }
+
+            seat.addEventListener('click', () => {
+                if(!seat.classList.contains('occupied')){
+                    seat.classList.toggle('selected');
+                }
+            });
+
+            rowDiv.appendChild(seat);
+            seatNumber++;
+        }
+        seatGrid.appendChild(rowDiv);
+    }
+}
+
+// Proceed to payment
+document.getElementById('book-btn').addEventListener('click', () => {
+    const selectedSeats = Array.from(document.querySelectorAll('.seat.selected')).map(s => s.textContent);
+
+    if(selectedSeats.length === 0){
+        alert("Please select at least one seat!");
+        return;
+    }
+
+    const params = new URLSearchParams();
+    params.set('bus_id', busId);
+    params.set('date', travelDate);
+    params.set('seats', selectedSeats.join(','));
+
+    window.location.href = `payment_user.html?${params.toString()}`;
+});
+</script>
+</body>
+</html>
