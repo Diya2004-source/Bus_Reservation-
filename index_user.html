@@ -5,33 +5,73 @@
 <title>Search Buses</title>
 <link href="bootstrap-5.0.2-dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <style>
-.navbar { background:#0d6efd; }
-.navbar a { color:white !important; }
-footer { text-align:center; padding:12px; margin-top:30px; background:#f8f9fa; }
-.bus-card{border:1px solid #e2e2e2;padding:12px;border-radius:8px;margin-bottom:12px;}
+  html, body {
+      height: 100%;
+      margin: 0;
+  }
+
+  body {
+      display: flex;
+      flex-direction: column;
+      background-image:url(images/homepage.jpg);
+      background-size:cover;
+  }
+
+  .main-content {
+      flex: 1;
+      margin:100px;
+  }
+
+  .navbar { 
+    background:#0d6efd; 
+  }
+  .navbar a {
+     color:white !important;
+  }
+  
+  .footer {
+      background: #222;
+      color: #fff;
+      text-align: center;
+      padding: 15px 0;
+  }
+
+  .bus-card{
+    border:1px solid #e2e2e2;
+    padding:12px;
+    border-radius:8px;
+    margin-bottom:12px;
+    background:white;
+  }
 </style>
 </head>
+
 <body>
+
 <nav class="navbar navbar-expand-lg">
   <div class="container-fluid">
     <a class="navbar-brand text-white" href="#">Bus Reservation</a>
   </div>
 </nav>
 
-<div class="container mt-4">
-  <h3>Search Buses</h3>
-  <div class="row g-2 align-items-center">
-    <div class="col-md-3"><input id="from" class="form-control" placeholder="From city (e.g. Ahmedabad)"></div>
-    <div class="col-md-3"><input id="to" class="form-control" placeholder="To city (e.g. Surat)"></div>
-    <div class="col-md-3"><input id="date" type="date" class="form-control"></div>
-    <div class="col-md-3"><button id="searchBtn" class="btn btn-primary w-100">Search</button></div>
-  </div>
+<div class="main-content">
+  <div class="container mt-4">
+    <h3>Search Buses</h3>
 
-  <div id="busList" class="mt-4"></div>
+    <div class="row g-2 align-items-center">
+      <div class="col-md-3"><input id="from" class="form-control" placeholder="From city (e.g. Ahmedabad)"></div>
+      <div class="col-md-3"><input id="to" class="form-control" placeholder="To city (e.g. Surat)"></div>
+      <div class="col-md-3"><input id="date" type="date" class="form-control"></div>
+      <div class="col-md-3"><button id="searchBtn" class="btn btn-primary w-100">Search</button></div>
+    </div>
+
+    <div id="busList" class="mt-4"></div>
+  </div>
 </div>
 
-<footer>© 2025 Bus Reservation System</footer>
+<footer class="footer">© 2025 Bus Reservation System</footer>
 
 <script>
 $("#searchBtn").on("click", function(){
@@ -81,5 +121,6 @@ $("#searchBtn").on("click", function(){
       });
 });
 </script>
+
 </body>
 </html>
