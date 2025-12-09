@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Search Buses</title>
+  <link href="bootstrap-5.0.2-dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      background-image: url(images/homepage.jpg);
+      background-size: cover;
+    }
+
+    .main-content {
+      flex: 1;
+      margin: 100px;
+    }
+
+    .navbar {
+      background: #0d6efd;
+    }
+
+    .navbar a {
+      color: white !important;
+    }
+
+    .footer {
+      background: #222;
+      color: #fff;
+      text-align: center;
+      padding: 15px 0;
+    }
+
+    .bus-card {
+      border: 1px solid #e2e2e2;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      background: white;
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar navbar-expand-lg bg-success">
+    <div class="container-fluid">
+      <a class="navbar-brand text-white" href="#">Bus Reservation</a>
+    </div>
+  </nav>
+
+  <div class="main-content">
+    <div class="container mt-4">
+      <h3>Search Buses</h3>
+
+      <div class="row g-2 align-items-center">
+        <div class="col-md-3"><input id="from" class="form-control" placeholder="From city (e.g. Ahmedabad)"></div>
+        <div class="col-md-3"><input id="to" class="form-control" placeholder="To city (e.g. Surat)"></div>
+        <div class="col-md-3"><input id="date" type="date" class="form-control"></div>
+        <div class="col-md-3"><button id="searchBtn" class="btn btn-primary w-100 bg-success">Search</button></div>
+      </div>
+
+      <div id="busList" class="mt-4"></div>
+    </div>
+  </div>
+
+  <footer class="footer">© 2025 Bus Reservation System</footer>
+
+  <script>
+    $("#searchBtn").on("click", function () {
+      const from = $("#from").val().trim();
+      const to = $("#to").val().trim();
+      const date = $("#date").val();
+
+      if (!from || !to || !date) {
+        alert("Please fill From, To and Date.");
+        return;
+      }
+
+      $("#busList").html("<p class='text-primary'>Loading...</p>");
+
+      fetch(`api/search_buses.php?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}&date=${encodeURIComponent(date)}`)
+        .then(r => r.json())
+        .then(data => {
+          if (data.error) {
+            $("#busList").html(`<p class="text-danger">${data.error}</p>`);
+            return;
+          }
+          if (!data.length) {
+            $("#busList").html("<p class='text-muted'>No buses found.</p>");
+            return;
+          }
+
+          let out = "";
+          data.forEach(bus => {
+            out += `<div class="bus-card">
+                    <div class="d-flex justify-content-between">
+                      <div>
+                        <h5>${bus.pickup} → ${bus.drop_location}</h5>
+                        <p class="mb-1">Bus ID: ${bus.bus_id} • Departure: ${bus.departure_time}</p>
+                        <p class="mb-1">Fare: ₹ ${parseFloat(bus.fare).toFixed(2)}</p>
+                      </div>
+                      <div class="align-self-center">
+                        <a class="btn btn-success" href="seat_user.html?bus_id=${bus.bus_id}&date=${encodeURIComponent(date)}">Select Seats</a>
+                      </div>
+                    </div>
+                  </div>`;
+          });
+          $("#busList").html(out);
+        })
+        .catch(err => {
+          console.error(err);
+          $("#busList").html("<p class='text-danger'>Server error.</p>");
+        });
+    });
+  </script>
+
+</body>
+
+</html>

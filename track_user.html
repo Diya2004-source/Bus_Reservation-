@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Track Booking</title>
+  <link href="bootstrap-5.0.2-dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-fluid"><a class="navbar-brand text-white" href="index_user.html">Bus Reservation</a></div>
+  </nav>
+
+  <div class="container mt-4">
+    <h4>Track Booking</h4>
+    <div class="mb-3">
+      <input id="booking_id" class="form-control" placeholder="Enter booking id or open with ?booking_id=...">
+    </div>
+    <button id="trackBtn" class="btn btn-primary">Track</button>
+
+    <div id="result" class="mt-4"></div>
+  </div>
+
+  <footer style="margin-top:30px;padding:12px;text-align:center;background:#f8f9fa">© 2025 Bus Reservation System
+  </footer>
+
+  <script>
+    $("#trackBtn").on("click", function () {
+      const id = $("#booking_id").val().trim();
+      if (!id) { alert("Enter booking id."); return; }
+      fetch(`api/track_booking.php?booking_id=${encodeURIComponent(id)}`)
+        .then(r => r.json())
+        .then(j => {
+          if (j.error) { $("#result").html(`<p class='text-danger'>${j.error}</p>`); return; }
+          let out = `<div class="card p-3">
+        <h5>Booking #${j.booking_id}</h5>
+        <p>Name: ${j.passenger_name}</p>
+        <p>Phone: ${j.phone}</p>
+        <p>From: ${j.from_location} → To: ${j.to_location}</p>
+        <p>Travel date: ${j.travel_date}</p>
+        <p>Seats: ${j.seats}</p>
+        <p>Status: ${j.payment_status}</p>
+      </div>`;
+          $("#result").html(out);
+        });
+    });
+
+    // open with query booking_id
+    const qp = new URLSearchParams(location.search).get("booking_id");
+    if (qp) { $("#booking_id").val(qp); $("#trackBtn").click(); }
+  </script>
+</body>
+
+</html>

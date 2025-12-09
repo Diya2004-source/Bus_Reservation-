@@ -1,30 +1,35 @@
 <?php
 include "../db.php";
 
-// Read POST data
-$bus_id = $_POST['bus_id'];
-$route  = $_POST['route'];
-$fare   = $_POST['fare'];
-$seat   = $_POST['seat'];
+$response = ['success' => false, 'error' => ''];
 
-// Validate inputs
-if (!$bus_id || !$route || !$fare || !$seat) {
-    http_response_code(400);
-    echo "Missing required fields";
-    exit;
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $bus_id = $_POST['bus_id'] ?? '';
+    $seats = $_POST['seats'] ?? '';
+    $passenger_name = $_POST['passenger_name'] ?? '';
+    $email = $_POST['email'] ?? '';
+    $phone = $_POST['phone'] ?? '';
+    $from_location = $_POST['from_location'] ?? '';
+    $to_location = $_POST['to_location'] ?? '';
+    $travel_date = $_POST['travel_date'] ?? '';
+    $upi_id = $_POST['upi_id'] ?? '';
+    $status = 'pending'; // default status
+
+    if (!$bus_id || !$seats || !$passenger_name || !$travel_date) {
+        $response['error'] = "Missing required fields.";
+        echo json_encode($response);
+        exit;
+    }
+
+    $stmt = $conn->prepare("INSERT INTO bookings (bus_id, seats, passenger_name, email, phone, from_location, to_location, travel_date, upi_id, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("isssssssss", $bus_id, $seats, $passenger_name, $email, $phone, $from_location, $to_location, $travel_date, $upi_id, $status);
+
+    if($stmt->execute()){
+        $response['success'] = true;
+    } else {
+        $response['error'] = $stmt->error;
+    }
+
+    echo json_encode($response);
 }
-
-// Insert into bookings table
-$stmt = $conn->prepare("INSERT INTO bookings (bus_id, seat, fare, route) VALUES (?, ?, ?, ?)");
-$stmt->bind_param("iiis", $bus_id, $seat, $fare, $route);
-
-if ($stmt->execute()) {
-    echo "success";
-} else {
-    http_response_code(500);
-    echo "Database error: " . $stmt->error;
-}
-
-$stmt->close();
-$conn->close();
 ?>

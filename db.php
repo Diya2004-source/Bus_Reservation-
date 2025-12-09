@@ -1,7 +1,12 @@
 <?php
-$conn = new mysqli("localhost", "root", "", "bus_reservation");
+// db.php
+$host = "localhost";
+$user = "root";
+$pass = "";
+$dbname = "make_trip";
 
+$conn = new mysqli($host, $user, $pass, $dbname);
 if ($conn->connect_error) {
-    die("Database connection failed!");
+    die("DB Connection failed: " . $conn->connect_error);
 }
 ?>
